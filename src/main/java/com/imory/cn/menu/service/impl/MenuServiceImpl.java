@@ -31,7 +31,7 @@ public class MenuServiceImpl implements MenuService {
     public List<Menu> selectAll()
     {
         HashMap<Integer, ArrayList<Menu>> map = new HashMap<Integer, ArrayList<Menu>>();
-        List<Menu> menus = mapper.selectByExample(null);
+        List<Menu> menus = menuCommonMapper.selectAll();
         for (Menu menu : menus)
         {
             int parentid = menu.getParent_id();

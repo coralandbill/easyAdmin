@@ -1,4 +1,5 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <!DOCTYPE html>
 <html>
 
@@ -33,21 +34,22 @@
 <div class="middle-box text-center loginscreen  animated fadeInDown">
     <div>
         <div>
-
             <h1 class="logo-name">M+</h1>
-
         </div>
         <h3>欢迎使用后台管理系统</h3>
 
-        <form class="m-t" role="form" action="http://www.zi-han.net/theme/hplus/index.html">
+        <form class="m-t" role="form" action="/admin/login.do" method="post">
             <div class="form-group">
-                <input type="email" class="form-control" placeholder="用户名" required="">
+                <input type="text" class="form-control" placeholder="用户名" name="name" required="">
             </div>
             <div class="form-group">
-                <input type="password" class="form-control" placeholder="密码" required="">
+                <input type="password" class="form-control" placeholder="密码" name="pass" required="">
             </div>
             <button type="submit" class="btn btn-primary block full-width m-b">登 录</button>
 
+            <c:if test="${not empty error}">
+                <p class="text-muted text-center" style="color: red;">${error}</p>
+            </c:if>
             <%--<p class="text-muted text-center"><a href="login.html#">
                 <small>忘记密码了？</small>
             </a> | <a href="register.html">注册一个新账号</a>

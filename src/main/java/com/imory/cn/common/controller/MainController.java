@@ -11,7 +11,6 @@ import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.servlet.http.HttpSession;
 import java.util.List;
@@ -41,7 +40,8 @@ public class MainController {
     {
         AdminUser adminUser = (AdminUser) session.getAttribute(AdminUser.SESSION_ID);
         List<Menu> menuList = menuService.selectByUser(adminUser.getId());
-        model.addAttribute("treeMenu", menuList);
+        System.out.println("menuList:" + menuList);
+        model.addAttribute("menuList", menuList);
         return "/index";
     }
 
@@ -67,6 +67,6 @@ public class MainController {
         }
         session.setAttribute(AdminUser.SESSION_ID, user);
         session.setAttribute(AdminUser.SESSION_AUTH_ID, menuService.selectAuthorities(user.getId()));
-        return "redirect:/admin/index";
+        return "redirect:/admin/index.do";
     }
 }

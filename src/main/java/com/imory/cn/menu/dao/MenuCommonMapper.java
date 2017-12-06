@@ -1,9 +1,11 @@
 package com.imory.cn.menu.dao;
 
 import com.imory.cn.menu.dto.Menu;
+import com.imory.cn.menu.dto.MenuExample;
 import org.apache.ibatis.annotations.Result;
 import org.apache.ibatis.annotations.Results;
 import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.annotations.SelectProvider;
 import org.apache.ibatis.type.JdbcType;
 
 import java.util.HashMap;
@@ -28,7 +30,7 @@ public interface MenuCommonMapper {
      */
     @Select({"SELECT id, name, url, icon, menu_type, display, parent_id FROM menu WHERE id IN(",
             "SELECT menuid FROM role_menu WHERE roleid IN ",
-            "(SELECT roleid FROM user_role WHERE userid=#{userid}) OR roleid=-1) AND menu_type<>'2' AND `status`='1'"})
+            "(SELECT roleid FROM user_role WHERE userid=#{userid}) OR roleid = -1) AND menu_type<>'2' AND `status`='1'"})
     @Results({
             @Result(column = "id", property = "id", jdbcType = JdbcType.INTEGER, id = true),
             @Result(column = "name", property = "name", jdbcType = JdbcType.VARCHAR),
@@ -62,4 +64,28 @@ public interface MenuCommonMapper {
 
     @Select({"CALL delete_menu(#{menuid})"})
     void deleteMenuById(HashMap<String, Object> map);
+
+    @Select({
+            "select",
+            "id, title, title as name,url, icon, menu_type, display, parent_id, creator, create_time, update_user, ",
+            "update_time, status, level",
+            "from menu"
+    })
+    @Results({
+            @Result(column="id", property="id", jdbcType=JdbcType.INTEGER, id=true),
+            @Result(column="title", property="title", jdbcType=JdbcType.VARCHAR),
+            @Result(column="name", property="name", jdbcType=JdbcType.VARCHAR),
+            @Result(column="url", property="url", jdbcType=JdbcType.VARCHAR),
+            @Result(column="icon", property="icon", jdbcType=JdbcType.VARCHAR),
+            @Result(column="menu_type", property="menu_type", jdbcType=JdbcType.CHAR),
+            @Result(column="display", property="display", jdbcType=JdbcType.INTEGER),
+            @Result(column="parent_id", property="parent_id", jdbcType=JdbcType.INTEGER),
+            @Result(column="creator", property="creator", jdbcType=JdbcType.INTEGER),
+            @Result(column="create_time", property="create_time", jdbcType=JdbcType.TIMESTAMP),
+            @Result(column="update_user", property="update_user", jdbcType=JdbcType.INTEGER),
+            @Result(column="update_time", property="update_time", jdbcType=JdbcType.TIMESTAMP),
+            @Result(column="status", property="status", jdbcType=JdbcType.CHAR),
+            @Result(column="level", property="level", jdbcType=JdbcType.INTEGER)
+    })
+    List<Menu> selectAll();
 }
