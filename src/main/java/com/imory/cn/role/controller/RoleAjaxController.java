@@ -3,6 +3,7 @@ package com.imory.cn.role.controller;
 import com.imory.cn.admin.dto.AdminUser;
 import com.imory.cn.role.dto.Role;
 import com.imory.cn.role.service.RoleService;
+import com.imory.cn.roleMenu.service.RoleMenuService;
 import com.imory.cn.utils.GetTotalPageNumUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.joda.time.DateTime;
@@ -31,9 +32,11 @@ public class RoleAjaxController {
     @Autowired
     private RoleService roleService;
 
+    @Autowired
+    private RoleMenuService roleMenuService;
+
     @RequestMapping("/listRole")
-    public String listRole(String name, Integer limit, Integer offset)
-    {
+    public String listRole(String name, Integer limit, Integer offset) {
         if (name == null) name = "";
 
         JSONObject jsonObject = new JSONObject();
@@ -41,8 +44,7 @@ public class RoleAjaxController {
         List<Map> resultList = new ArrayList<>();
         List<Role> roleList = roleService.listRole(offset, limit, name);
         BeanMap roleBeanMap = BeanMap.create(new Role());
-        for (Role role : roleList)
-        {
+        for (Role role : roleList) {
             roleBeanMap.setBean(role);
             Map branchInstMap = new HashMap<>();
 
@@ -63,33 +65,26 @@ public class RoleAjaxController {
     }
 
     @RequestMapping("/saveRole")
-    public String saveRole(String name, String desc, Integer roleId, HttpSession session)
-    {
+    public String saveRole(String name, String desc, Integer roleId, HttpSession session) {
         AdminUser adminUser = (AdminUser) session.getAttribute(AdminUser.SESSION_ID);
         JSONObject jsonObject = new JSONObject();
         Role role;
-        if (roleId != null)
-        {
+        if (roleId != null) {
             role = roleService.selectById(roleId);
-        } else
-        {
+        } else {
             role = new Role();
             role.setCreate_time(new Date());
             role.setCreator(adminUser.getId());
         }
-        if (StringUtils.isNotBlank(name))
-        {
+        if (StringUtils.isNotBlank(name)) {
             role.setName(name);
         }
-        if (StringUtils.isNotBlank(desc))
-        {
+        if (StringUtils.isNotBlank(desc)) {
             role.setDescription(desc);
         }
-        if (roleId != null)
-        {
+        if (roleId != null) {
             jsonObject.put("success", roleService.update(role));
-        } else
-        {
+        } else {
             jsonObject.put("success", roleService.insert(role));
         }
 
@@ -97,22 +92,27 @@ public class RoleAjaxController {
     }
 
     @RequestMapping("/getById")
-    public String getById(Integer id)
-    {
+    public String getById(Integer id) {
         JSONObject jsonObject = new JSONObject();
         Role role = roleService.selectById(id);
-        if (role != null)
-        {
+        if (role != null) {
             BeanMap roleBeanMap = BeanMap.create(new Role());
             roleBeanMap.setBean(role);
             Map branchInstMap = new HashMap<>();
             branchInstMap.putAll(roleBeanMap);
             jsonObject.put("success", Boolean.TRUE);
             jsonObject.put("role", branchInstMap);
-        } else
-        {
+        } else {
             jsonObject.put("success", Boolean.FALSE);
         }
+        return jsonObject.toString();
+    }
+
+    @RequestMapping("/saveRoleMenu")
+    public String saveRoleMenu(Integer roleId, String menuId, HttpSession session) {
+        JSONObject jsonObject = new JSONObject();
+        AdminUser adminUser = (AdminUser) session.getAttribute(AdminUser.SESSION_ID);
+        jsonObject.put("success", roleMenuService.updateRoleMenu(menuId, roleId, adminUser.getId()));
         return jsonObject.toString();
     }
 }

@@ -24,10 +24,11 @@
 <div class="wrapper wrapper-content  animated fadeInRight">
 
     <div class="row">
-        <div class="col-sm-6">
+        <div class="col-sm-12">
+            <input type="hidden" id="roleId" value="${roleId}"/>
             <div class="ibox float-e-margins">
                 <div class="ibox-title">
-                    <h5 onclick="getCheckNode();">菜单配置
+                    <h5>菜单配置
                         <small>配置角色权限菜单</small>
                     </h5>
                     <div class="ibox-tools">
@@ -43,25 +44,8 @@
                     <div id="treeDemo" class="ztree">
                     </div>
                 </div>
-            </div>
-        </div>
-        <div class="col-sm-6">
-            <div class="ibox float-e-margins">
-                <div class="ibox-title">
-                    <h5>JSON示例</h5>
-                    <div class="ibox-tools">
-                        <a class="collapse-link">
-                            <i class="fa fa-chevron-up"></i>
-                        </a>
-                        <a class="close-link">
-                            <i class="fa fa-times"></i>
-                        </a>
-                    </div>
-                </div>
                 <div class="ibox-content">
-                    <div id="using_json">
-                        ${menu}
-                    </div>
+                    <button type="button" onclick="saveMenu();" class="btn btn-outline btn-primary edit">保存配置</button>
                 </div>
             </div>
         </div>
@@ -71,6 +55,7 @@
 <script src="/scripts/bootstrap.min.js?v=3.3.6"></script>
 <script src="/scripts/ztree/jquery.ztree.core.min.js"></script>
 <script src="/scripts/ztree/jquery.ztree.excheck.min.js"></script>
+<script src="/scripts/plugins/layer/layer.min.js"></script>
 <script>
     // zTree 的参数配置，深入使用请参考 API 文档（setting 配置详解）
     var setting = {
@@ -82,15 +67,46 @@
         }
     };
 
-    var zTree, rMenu;
+    var zTree;
     $(document).ready(function () {
         $.fn.zTree.init($("#treeDemo"), setting, ${menu});
         zTree = $.fn.zTree.getZTreeObj("treeDemo");
+       setSelectNode();
     });
 
-    function getCheckNode() {
+    function setSelectNode() {
         var nodes = zTree.getCheckedNodes(true);
         console.log(nodes);
+    }
+
+    function saveMenu() {
+        var nodes = zTree.getCheckedNodes(true);
+        var _idArr = [];
+        for (var i = 0; i < nodes.length; i++) {
+            _idArr.push(nodes[i].id);
+        }
+        _idArr.push(1);
+        _idArr.push(2);
+
+        $.ajax({
+            url: "/admin/roleAjax/saveRoleMenu.do",
+            contentType: "application/x-www-form-urlencoded; charset=utf-8",
+            dataType: "json",
+            type: "POST",
+            data: {
+                roleId: ${roleId},
+                menuId: _idArr.toString()
+            },
+            success: function (data) {
+                if (data.success) {
+                    layer.msg('操作成功', {
+                        time: 1000 //2秒关闭（如果不配置，默认是3秒）
+                    }, function () {
+                        location.reload();
+                    });
+                }
+            }
+        });
     }
 </script>
 </body>

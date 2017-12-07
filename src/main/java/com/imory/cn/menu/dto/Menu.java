@@ -117,6 +117,26 @@ public class Menu {
 
     private HashMap<String,Object> additionalParameters;
 
+    private Boolean checked;
+
+    private Boolean enable;
+
+    public Boolean getEnable() {
+        return enable;
+    }
+
+    public void setEnable(Boolean enable) {
+        this.enable = enable;
+    }
+
+    public Boolean getChecked() {
+        return checked;
+    }
+
+    public void setChecked(Boolean checked) {
+        this.checked = checked;
+    }
+
     public HashMap<String, Object> getAdditionalParameters()
     {
         return additionalParameters;

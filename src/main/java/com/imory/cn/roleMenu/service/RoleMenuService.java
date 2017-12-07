@@ -21,4 +21,11 @@ public interface RoleMenuService {
      * @return
      */
     List<Menu> listMenuByRoleId(int id);
+
+    /**
+     * 更新角色权限
+     * @param ids
+     * @return
+     */
+    boolean updateRoleMenu(String ids, int roleid, int userid);
 }
