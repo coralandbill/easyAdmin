@@ -175,8 +175,7 @@
                 id: id
             },
             success: function (data) {
-                if(data.success)
-                {
+                if (data.success) {
                     $("#roleName").val(data.role.name);
                     $("#roleDesc").val(data.role.description);
                     $("#exampleModal").modal('show');
@@ -185,9 +184,13 @@
         });
     }
 
+    function setMenu(roleId) {
+        location.href = '/admin/role/menu.do?roleId=' + roleId;
+    }
+
     function czFun(value) {
         return '<button type="button" onclick="editRole(' + value + ');" class="btn btn-outline btn-primary edit">编辑</button>' +
-            '<button type="button" style="margin-left: 10px;" class="btn btn-outline btn-success delete">配置</button>';
+            '<button type="button" onclick="setMenu(' + value + ');" style="margin-left: 10px;" class="btn btn-outline btn-success delete">配置</button>';
     }
 
     $("#exampleTableEvents").bootstrapTable({

@@ -1,6 +1,7 @@
 package com.imory.cn.menu.dto;
 
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 
 public class Menu {
@@ -111,6 +112,30 @@ public class Menu {
     private List<Menu> children;
 
     private String name;
+
+    private Integer roleId;
+
+    private HashMap<String,Object> additionalParameters;
+
+    public HashMap<String, Object> getAdditionalParameters()
+    {
+        return additionalParameters;
+    }
+
+    public void setAdditionalParameters(HashMap<String, Object> additionalParameters)
+    {
+        this.additionalParameters = additionalParameters;
+    }
+
+    public Integer getRoleId()
+    {
+        return roleId;
+    }
+
+    public void setRoleId(Integer roleId)
+    {
+        this.roleId = roleId;
+    }
 
     public String getName()
     {
