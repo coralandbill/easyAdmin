@@ -40,7 +40,6 @@ public class MainController {
     {
         AdminUser adminUser = (AdminUser) session.getAttribute(AdminUser.SESSION_ID);
         List<Menu> menuList = menuService.selectByUser(adminUser.getId());
-        System.out.println("menuList:" + menuList);
         model.addAttribute("menuList", menuList);
         return "/index";
     }

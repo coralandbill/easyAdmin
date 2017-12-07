@@ -1,4 +1,4 @@
-package com.imory.cn.menu;
+package com.imory.cn.menu.controller;
 
 import com.google.gson.Gson;
 import com.imory.cn.annotation.SessionCheck;

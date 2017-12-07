@@ -26,7 +26,14 @@
     <!-- if you use annotation you must configure following setting -->
     <!-- 激活基于注解的配置 @RequestMapping, @ExceptionHandler,数据绑定 ,@NumberFormat ,
     @DateTimeFormat ,@Controller ,@Valid ,@RequestBody ,@ResponseBody等  -->
-    <mvc:annotation-driven/>
+
+    <mvc:annotation-driven>
+        <mvc:message-converters register-defaults="true">
+            <bean class="org.springframework.http.converter.StringHttpMessageConverter">
+                <constructor-arg value="UTF-8" />
+            </bean>
+        </mvc:message-converters>
+    </mvc:annotation-driven>
 
     <mvc:interceptors>
         <bean id="authorizeInterceptor" class="com.imory.cn.intercept.ControllerIntercept"/>
