@@ -72,6 +72,7 @@
     $(document).ready(function () {
         $.fn.zTree.init($("#treeDemo"), setting, ${menu});
         zTree = $.fn.zTree.getZTreeObj("treeDemo");
+        zTree.expandAll(true);
     });
 
     function saveMenu() {
