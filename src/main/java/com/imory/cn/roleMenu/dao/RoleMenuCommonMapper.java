@@ -22,7 +22,7 @@ public interface RoleMenuCommonMapper {
 
     @Select({"SELECT m.id, m.title, m.title as name,m.url, m.icon, m.menu_type, m.display, m.parent_id, m.status,",
             "r.roleid FROM menu m LEFT JOIN (SELECT roleid,menuid FROM role_menu WHERE roleid=#{roleid})",
-            " r ON m.id=r.menuid  where m.status = '1'"})
+            " r ON m.id=r.menuid  where m.status = '1' and m.id not in (1,2)"})
     @Results({
             @Result(column = "parent_id", property = "parent_id", jdbcType = JdbcType.INTEGER),
             @Result(column = "roleid", property = "roleId", jdbcType = JdbcType.INTEGER)

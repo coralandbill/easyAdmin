@@ -71,13 +71,7 @@
     $(document).ready(function () {
         $.fn.zTree.init($("#treeDemo"), setting, ${menu});
         zTree = $.fn.zTree.getZTreeObj("treeDemo");
-       setSelectNode();
     });
-
-    function setSelectNode() {
-        var nodes = zTree.getCheckedNodes(true);
-        console.log(nodes);
-    }
 
     function saveMenu() {
         var nodes = zTree.getCheckedNodes(true);
