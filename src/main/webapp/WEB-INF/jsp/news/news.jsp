@@ -34,8 +34,7 @@
                         <h4 class="example-title">活动管理</h4>
                         <div class="example">
                             <div class="btn-group hidden-xs" id="exampleTableEventsToolbar" role="group">
-                                <button type="button" class="btn btn-outline btn-default" data-toggle="modal"
-                                        data-target="#exampleModal">
+                                <button type="button" onclick="javascript:location.href='/admin/news/addNews.do?newsType=${newsType}';" class="btn btn-outline btn-default">
                                     <i class="glyphicon glyphicon-plus" aria-hidden="true">添加</i>
                                 </button>
                                 <%--<button type="button" class="btn btn-outline btn-default">

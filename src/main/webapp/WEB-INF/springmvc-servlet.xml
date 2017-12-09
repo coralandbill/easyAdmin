@@ -48,18 +48,28 @@
         <property name="suffix" value=".jsp"/>
     </bean>
 
+    <bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
+        <!-- 指定所上传文件的总大小不能超过51200KB。注意maxUploadSize属性的限制不是针对单个文件，而是所有文件的容量之和 -->
+        <property name="maxUploadSize" value="51200000"/>
+    </bean>
+
     <!-- 数据源配置 -->
     <bean id="propertyConfigurer" class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
         <property name="ignoreUnresolvablePlaceholders" value="true"/>
         <property name="propertiesArray">
             <array>
                 <ref bean="configProperties"/>
+                <ref bean="runtimeProperties"/>
             </array>
         </property>
     </bean>
 
     <bean id="configProperties" class="org.springframework.beans.factory.config.PropertiesFactoryBean">
         <property name="location" value="classpath:dbconfig.properties"/>
+    </bean>
+
+    <bean id="runtimeProperties" class="org.springframework.beans.factory.config.PropertiesFactoryBean">
+        <property name="location" value="classpath:runtimes.properties"/>
     </bean>
 
 

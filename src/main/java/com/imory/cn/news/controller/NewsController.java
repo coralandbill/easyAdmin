@@ -25,4 +25,12 @@ public class NewsController {
         model.addAttribute("newsType", newsType);
         return "news/news";
     }
+
+    @RequestMapping("/addNews")
+    @SessionCheck
+    public String addNews(Integer newsType, Model model)
+    {
+        model.addAttribute("newsType", newsType);
+        return "news/addNews";
+    }
 }
