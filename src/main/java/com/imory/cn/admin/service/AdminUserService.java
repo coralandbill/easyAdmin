@@ -20,6 +20,11 @@ public interface AdminUserService {
      */
     public List<AdminUser> select(int page, int pageSize, String query);
 
+
+    List<AdminUser> listUser(int startPos, int pageSize, String name, Integer createId);
+
+    int countUser(String name, Integer createId);
+
     /**
      * 查询数据总数
      *
@@ -89,8 +94,7 @@ public interface AdminUserService {
      *
      * @param userId
      * @param psw
-     * @param oldPsw
      * @return
      */
-    WebResult updatePass(int userId, String psw, String oldPsw);
+    boolean updatePass(int userId, String psw);
 }

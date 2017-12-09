@@ -11,6 +11,7 @@ import com.imory.cn.role.dto.Role;
 import com.imory.cn.userRole.dao.UserRoleMapper;
 import com.imory.cn.userRole.dto.UserRoleExample;
 import com.imory.cn.utils.MD5Util;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -42,6 +43,39 @@ public class AdminUserServiceImpl implements AdminUserService {
     public List<AdminUser> select(int page, int pageSize, String query)
     {
         return adminUserCommonMapper.select((page - 1) * pageSize, pageSize, "%" + query + "%");
+    }
+
+    @Override
+    public List<AdminUser> listUser(int startPos, int pageSize, String name, Integer createId)
+    {
+        AdminUserExample adminUserExample = new AdminUserExample();
+        AdminUserExample.Criteria criteria = adminUserExample.createCriteria();
+        if (StringUtils.isNotBlank(name))
+        {
+            criteria.andNameLike(name);
+        }
+        if (createId != -1)
+        {
+            criteria.andCreatorEqualTo(createId);
+        }
+        adminUserExample.setOrderByClause("update_time desc" + " limit " + startPos + "," + pageSize);
+        return mapper.selectByExample(adminUserExample);
+    }
+
+    @Override
+    public int countUser(String name, Integer createId)
+    {
+        AdminUserExample adminUserExample = new AdminUserExample();
+        AdminUserExample.Criteria criteria = adminUserExample.createCriteria();
+        if (StringUtils.isNotBlank(name))
+        {
+            criteria.andNameLike(name);
+        }
+        if (createId != -1)
+        {
+            criteria.andCreatorEqualTo(createId);
+        }
+        return mapper.countByExample(adminUserExample);
     }
 
     @Override
@@ -122,24 +156,18 @@ public class AdminUserServiceImpl implements AdminUserService {
     }
 
     @Override
-    public WebResult updatePass(int userId, String psw, String oldPsw)
+    public boolean updatePass(int userId, String psw)
     {
         AdminUser user = mapper.selectByPrimaryKey(userId);
-        if (user.getPsw().equalsIgnoreCase(MD5Util.MD5(oldPsw)))
+        user.setUpdate_user(userId);
+        user.setUpdate_time(new Date());
+        user.setPsw(MD5Util.MD5(psw));
+        if (mapper.updateByPrimaryKeySelective(user) > 0)
         {
-            user.setUpdate_user(userId);
-            user.setUpdate_time(new Date());
-            user.setPsw(MD5Util.MD5(psw));
-            if (mapper.updateByPrimaryKeySelective(user) > 0)
-            {
-                return WebResult.success();
-            } else
-            {
-                return WebResult.unKnown();
-            }
+            return true;
         } else
         {
-            return WebResult.error("旧密码错误");
+            return false;
         }
     }
 }
