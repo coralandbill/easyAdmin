@@ -23,4 +23,6 @@ public interface NewsService {
 
     int countNews(String title, Integer userId);
 
+    News selectById(Integer id);
+
 }

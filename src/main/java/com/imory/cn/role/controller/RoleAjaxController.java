@@ -58,7 +58,7 @@ public class RoleAjaxController {
             resultList.add(branchInstMap);
         }
 
-        int roleCnt = roleService.countRole(search);
+        int roleCnt = roleService.countRole(search, adminUser.getId());
 
         jsonObject.put("rows", resultList);
         jsonObject.put("total", roleCnt);

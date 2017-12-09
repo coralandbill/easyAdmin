@@ -1,5 +1,7 @@
 package com.imory.cn.news.dto;
 
+import org.joda.time.DateTime;
+
 import java.util.Date;
 
 public class News {

@@ -6,6 +6,7 @@ import com.imory.cn.news.dto.NewsExample;
 import com.imory.cn.news.service.NewsService;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 
@@ -18,6 +19,7 @@ import java.util.List;
  * @version 1.0
  * @Date 2017/12/9
  */
+@Service
 public class NewsServiceImpl implements NewsService {
 
     @Autowired
@@ -67,5 +69,11 @@ public class NewsServiceImpl implements NewsService {
             criteria.andCreatorEqualTo(userId);
         }
         return newsMapper.countByExample(newsExample);
+    }
+
+    @Override
+    public News selectById(Integer id)
+    {
+        return newsMapper.selectByPrimaryKey(id);
     }
 }
