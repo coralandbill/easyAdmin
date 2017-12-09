@@ -34,13 +34,17 @@ public class RoleServiceImpl implements RoleService {
      * @return
      */
     @Override
-    public List<Role> listRole(int startPos, int pageSize, String name)
+    public List<Role> listRole(int startPos, int pageSize, String name, Integer userId)
     {
         RoleExample roleExample = new RoleExample();
         RoleExample.Criteria criteria = roleExample.createCriteria();
         if (StringUtils.isNotBlank(name))
         {
             criteria.andNameLike(name);
+        }
+        if (userId != -1)
+        {
+            criteria.andCreatorEqualTo(userId);
         }
         roleExample.setOrderByClause("create_time desc" + " limit " + startPos + "," + pageSize);
 

@@ -216,4 +216,20 @@ public class AdminUserAjaxController {
         }
         return jsonObject.toString();
     }
+
+    @RequestMapping("/deleteUserRole")
+    public String deleteUserRole(String ids, HttpSession session)
+    {
+        JSONObject jsonObject = new JSONObject();
+        AdminUser adminUser = (AdminUser) session.getAttribute(AdminUser.SESSION_ID);
+        if (adminUser != null)
+        {
+            adminUserService.deleteUserRole(adminUser.getId(), ids);
+            jsonObject.put("success", Boolean.TRUE);
+        } else
+        {
+            jsonObject.put("success", Boolean.FALSE);
+        }
+        return jsonObject.toString();
+    }
 }

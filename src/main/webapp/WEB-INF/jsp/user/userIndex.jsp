@@ -38,13 +38,14 @@
                                 <button type="button" class="btn btn-outline btn-default" onclick="doAdd();">
                                     <i class="glyphicon glyphicon-plus" aria-hidden="true">添加</i>
                                 </button>
-                                <button type="button" class="btn btn-outline btn-default">
+                                <button type="button" class="btn btn-outline btn-default" onclick="removeUser();">
                                     <i class="glyphicon glyphicon-trash" aria-hidden="true">批量删除</i>
                                 </button>
                             </div>
                             <table id="exampleTableEvents" data-mobile-responsive="true">
                                 <thead>
                                 <tr>
+                                    <th data-field="state" data-checkbox="true"></th>
                                     <th data-field="id">ID</th>
                                     <th data-field="name">名称</th>
                                     <th data-field="email">邮箱</th>
@@ -167,6 +168,52 @@
 <script src="/scripts/plugins/jquery-validate/messages_zh.min.js"></script>
 <script src="/scripts/plugins/layer/layer.min.js"></script>
 <script>
+    var table;
+
+    function removeUser() {
+        var selectObj = table.bootstrapTable('getSelections');
+        if (selectObj.length == 0) {
+            layer.msg("请选择需要删除的角色", {time: 1000});
+        }
+        else {
+            layer.confirm('确定删除角色？', {
+                btn: ['确定', '取消'] //按钮
+            }, function () {
+                var _idArr = [];
+                for (var i = 0; i < selectObj.length; i++) {
+                   _idArr.push(selectObj[i].id);
+                }
+                $.ajax({
+                    url: "/admin/userAjax/deleteUserRole.do",
+                    contentType: "application/x-www-form-urlencoded; charset=utf-8",
+                    dataType: "json",
+                    type: "POST",
+                    data: {
+                        ids: _idArr.toString()
+                    },
+                    success: function (data) {
+                        if (data.success) {
+                            layer.msg('操作成功', {
+                                time: 1000 //2秒关闭（如果不配置，默认是3秒）
+                            }, function () {
+                                $('#exampleTableEvents').bootstrapTable(
+                                    "refresh",
+                                    {
+                                        url: "/admin/userAjax/listUser.do",
+                                    }
+                                );
+                            });
+                        }
+                        else {
+                            layer.msg("操作失败");
+                        }
+                    }
+                });
+            }, function () {
+
+            });
+        }
+    }
 
     $("#userForm").validate({
         rules: {
@@ -274,7 +321,6 @@
             success: function (data) {
                 if (data.success) {
                     $("#roleName").val(data.adminUser.name);
-                    $("#psw").val(data.adminUser.psw);
                     $("#email").val(data.adminUser.email);
                     $(":radio[name='flag'][value='" + data.adminUser.flag + "']").prop("checked", "checked");
                     $("#pdwDiv").hide();
@@ -349,7 +395,7 @@
         }
     });
 
-    $("#exampleTableEvents").bootstrapTable({
+    table = $("#exampleTableEvents").bootstrapTable({
         url: "/admin/userAjax/listUser.do",
         dataType: "json",
         search: !0,

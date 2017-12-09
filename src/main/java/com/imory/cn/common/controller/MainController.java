@@ -55,6 +55,18 @@ public class MainController {
         return "login";
     }
 
+    /**
+     * 进入登录页面
+     *
+     * @return
+     */
+    @RequestMapping(value = "loginOut", method = RequestMethod.GET)
+    public String loginOut(HttpSession session)
+    {
+        session.invalidate();
+        return "redirect:/admin/login.do";
+    }
+
     @RequestMapping(value = "login", method = RequestMethod.POST)
     public String login(String name, String pass, ModelMap map, HttpSession session)
     {

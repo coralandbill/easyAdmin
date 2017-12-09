@@ -2,7 +2,6 @@ package com.imory.cn.admin.service;
 
 
 import com.imory.cn.admin.dto.AdminUser;
-import com.imory.cn.common.dto.WebResult;
 import com.imory.cn.role.dto.Role;
 
 import java.util.List;
@@ -97,4 +96,6 @@ public interface AdminUserService {
      * @return
      */
     boolean updatePass(int userId, String psw);
+
+    void deleteUserRole(Integer userId, String ids);
 }

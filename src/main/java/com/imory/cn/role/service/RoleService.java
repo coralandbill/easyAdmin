@@ -19,7 +19,7 @@ public interface RoleService {
      * 查询所有角色
      * @return
      */
-    List<Role> listRole(int startPos, int pageSize, String name);
+    List<Role> listRole(int startPos, int pageSize, String name, Integer userId);
 
     /**
      * 查询角色数目

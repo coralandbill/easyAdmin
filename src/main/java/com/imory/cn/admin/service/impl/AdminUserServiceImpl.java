@@ -170,4 +170,27 @@ public class AdminUserServiceImpl implements AdminUserService {
             return false;
         }
     }
+
+    @Override
+    public void deleteUserRole(Integer userId, String ids)
+    {
+        String[] idArr = ids.split(",");
+        for (String id : idArr)
+        {
+            AdminUser adminUser = mapper.selectByPrimaryKey(Integer.valueOf(id));
+            if (adminUser != null && adminUser.getCreator().equals(userId))
+            {
+                //删除角色
+                UserRoleExample roleExample = new UserRoleExample();
+                UserRoleExample.Criteria criteria = roleExample.createCriteria();
+                criteria.andUseridEqualTo(adminUser.getId());
+                List<UserRole> userRoleList = userRoleMapper.selectByExample(roleExample);
+                for (UserRole userRole : userRoleList)
+                {
+                    userRoleMapper.deleteByPrimaryKey(userRole);
+                }
+                mapper.deleteByPrimaryKey(adminUser.getId());
+            }
+        }
+    }
 }
