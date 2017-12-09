@@ -2,6 +2,8 @@ package com.imory.cn.admin.controller;
 
 import com.imory.cn.admin.dto.AdminUser;
 import com.imory.cn.admin.service.AdminUserService;
+import com.imory.cn.userRole.dto.UserRole;
+import com.imory.cn.userRole.service.UserRoleService;
 import com.imory.cn.utils.GetTotalPageNumUtil;
 import com.imory.cn.utils.MD5Util;
 import org.apache.commons.lang3.StringUtils;
@@ -30,6 +32,9 @@ public class AdminUserAjaxController {
 
     @Autowired
     private AdminUserService adminUserService;
+
+    @Autowired
+    private UserRoleService userRoleService;
 
     @RequestMapping("/listUser")
     public String listUser(String name, Integer limit, Integer offset, HttpSession session)
@@ -139,6 +144,72 @@ public class AdminUserAjaxController {
             branchInstMap.putAll(roleBeanMap);
             jsonObject.put("success", Boolean.TRUE);
             jsonObject.put("adminUser", branchInstMap);
+        } else
+        {
+            jsonObject.put("success", Boolean.FALSE);
+        }
+        return jsonObject.toString();
+    }
+
+    @RequestMapping("/getUserRoleId")
+    public String getUserRoleId(Integer userId)
+    {
+        JSONObject jsonObject = new JSONObject();
+        AdminUser adminUser = adminUserService.selectById(userId);
+        if (adminUser != null)
+        {
+            List<UserRole> userRoleList = userRoleService.getUserRoleByUserId(userId);
+            if (userRoleList != null && userRoleList.size() > 0)
+            {
+                jsonObject.put("roleId", userRoleList.get(0).getRoleid());
+                jsonObject.put("success", Boolean.TRUE);
+            } else
+            {
+                jsonObject.put("success", Boolean.FALSE);
+            }
+        } else
+        {
+            jsonObject.put("success", Boolean.FALSE);
+        }
+        return jsonObject.toString();
+    }
+
+    @RequestMapping("/saveUserRole")
+    public String saveUserRole(Integer userId, Integer roleId, HttpSession session)
+    {
+        JSONObject jsonObject = new JSONObject();
+        AdminUser adminUser = (AdminUser) session.getAttribute(AdminUser.SESSION_ID);
+        if (adminUser != null)
+        {
+            //获取UserRole
+            List<UserRole> userRoleList = userRoleService.getUserRoleByUserId(userId);
+            if (userRoleList != null && userRoleList.size() > 0)
+            {
+                UserRole userRole = userRoleList.get(0);
+                userRole.setRoleid(roleId);
+                userRole.setCreate_time(new Date());
+                if (userRoleService.updateUserRole(userRole))
+                {
+                    jsonObject.put("success", Boolean.TRUE);
+                } else
+                {
+                    jsonObject.put("success", Boolean.FALSE);
+                }
+            } else
+            {
+                UserRole userRole = new UserRole();
+                userRole.setRoleid(roleId);
+                userRole.setUserid(userId);
+                userRole.setCreator(adminUser.getId());
+                userRole.setCreate_time(new Date());
+                if (userRoleService.saveUserRole(userRole))
+                {
+                    jsonObject.put("success", Boolean.TRUE);
+                } else
+                {
+                    jsonObject.put("success", Boolean.FALSE);
+                }
+            }
         } else
         {
             jsonObject.put("success", Boolean.FALSE);

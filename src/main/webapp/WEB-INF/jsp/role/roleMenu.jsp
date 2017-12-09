@@ -46,6 +46,7 @@
                 </div>
                 <div class="ibox-content">
                     <button type="button" onclick="saveMenu();" class="btn btn-outline btn-primary edit">保存配置</button>
+                    <button type="button" onclick="javascript:location.href='/admin/role/index.do';" class="btn btn-outline btn-success">返回上一步</button>
                 </div>
             </div>
         </div>

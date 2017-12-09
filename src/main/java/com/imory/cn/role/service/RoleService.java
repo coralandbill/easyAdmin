@@ -33,4 +33,6 @@ public interface RoleService {
     Role selectById(Integer id);
 
     boolean update(Role role);
+
+    List<Role> listRoleByUserId(Integer userId);
 }

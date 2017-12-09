@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <!DOCTYPE html>
 <html>
 <!-- Mirrored from www.zi-han.net/theme/hplus/table_bootstrap.html by HTTrack Website Copier/3.x [XR&CO'2014], Wed, 20 Jan 2016 14:20:03 GMT -->
@@ -127,6 +128,37 @@
         </div>
     </div>
 </div>
+<div class="modal fade" id="userExampleModal" style="z-index: 999" tabindex="-1" role="dialog"
+     aria-labelledby="exampleModalLabel" userId="">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span>
+                </button>
+                <h4 class="modal-title">配置角色</h4>
+            </div>
+            <div class="modal-body">
+                <form id="userForm">
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">选择角色</label>
+                        <div class="col-sm-10">
+                            <select class="form-control m-b" id="roleSelect" name="roleSelect">
+                                <option value="99999">请选择</option>
+                                <c:forEach items="${roleList}" var="role">
+                                    <option value="${role.id}">${role.name}</option>
+                                </c:forEach>
+                            </select>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+                <button type="button" class="btn btn-primary" onclick="$('#userForm').submit();">确定</button>
+            </div>
+        </div>
+    </div>
+</div>
 <script src="/scripts/jquery.min.js?v=2.1.4"></script>
 <script src="/scripts/bootstrap.min.js?v=3.3.6"></script>
 <script src="/scripts/plugins/bootstrap-table/bootstrap-table.min.js"></script>
@@ -135,6 +167,45 @@
 <script src="/scripts/plugins/jquery-validate/messages_zh.min.js"></script>
 <script src="/scripts/plugins/layer/layer.min.js"></script>
 <script>
+
+    $("#userForm").validate({
+        rules: {
+            roleSelect: "required"
+        },
+        messages: {
+            roleSelect: "请选择角色",
+        },
+        submitHandler: function () {
+            $.ajax({
+                url: "/admin/userAjax/saveUserRole.do",
+                contentType: "application/x-www-form-urlencoded; charset=utf-8",
+                dataType: "json",
+                type: "POST",
+                data: {
+                    roleId: $("#roleSelect").val(),
+                    userId: $("#userExampleModal").attr("userId")
+                },
+                success: function (data) {
+                    if (data.success) {
+                        layer.msg('操作成功', {
+                            time: 1000 //2秒关闭（如果不配置，默认是3秒）
+                        }, function () {
+                            $("#userExampleModal").modal('hide');
+                            $('#exampleTableEvents').bootstrapTable(
+                                "refresh",
+                                {
+                                    url: "/admin/userAjax/listUser.do",
+                                }
+                            );
+                        });
+                    }
+                    else {
+                        layer.msg("操作失败");
+                    }
+                }
+            });
+        }
+    });
 
     $("#commentForm").validate({
         rules: {
@@ -213,14 +284,30 @@
         });
     }
 
-    function setMenu(roleId) {
-        location.href = '/admin/role/menu.do?roleId=' + roleId;
-    }
-
     function czFun(value) {
         return '<button type="button" onclick="editRole(' + value + ');" style="text-align: center" class="btn btn-outline btn-primary edit">编辑</button>' +
-            '<button type="button" onclick="setMenu(' + value + ');" style="text-align: center;margin-left: 20px;" class="btn btn-outline btn-success delete">配置</button>' +
+            '<button type="button" onclick="selectRole(' + value + ');" style="text-align: center;margin-left: 20px;" class="btn btn-outline btn-success delete">配置</button>' +
             '<button type="button" onclick="resetPwd(' + value + ');" style="text-align: center;margin-left: 20px;" class="btn btn-outline btn-success delete">重置密码</button>';
+    }
+
+    function selectRole(id) {
+        $("#userExampleModal").attr("userId", id);
+        $('#roleSelect').prop('selectedIndex', 0);
+        $.ajax({
+            url: "/admin/userAjax/getUserRoleId.do",
+            contentType: "application/x-www-form-urlencoded; charset=utf-8",
+            dataType: "json",
+            type: "POST",
+            data: {
+                userId: id
+            },
+            success: function (data) {
+                if (data.success) {
+                    $("#roleSelect option[value='" + data.roleId + "']").attr("selected", true);
+                }
+                $("#userExampleModal").modal('show');
+            }
+        });
     }
 
     function resetPwd(id) {

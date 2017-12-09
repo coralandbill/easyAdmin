@@ -76,4 +76,13 @@ public class RoleServiceImpl implements RoleService {
     {
         return roleMapper.updateByPrimaryKey(role) > 0;
     }
+
+    @Override
+    public List<Role> listRoleByUserId(Integer userId)
+    {
+        RoleExample roleExample = new RoleExample();
+        RoleExample.Criteria criteria = roleExample.createCriteria();
+        criteria.andCreatorEqualTo(userId);
+        return roleMapper.selectByExample(roleExample);
+    }
 }
