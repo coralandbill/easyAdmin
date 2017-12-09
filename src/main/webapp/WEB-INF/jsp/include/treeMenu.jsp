@@ -3,10 +3,12 @@
 <li>
     <c:choose>
         <c:when test="${menu.level == 1}">
-            <a href="#">
+            <a href="${menu.url}">
                 <i class="fa fa-home"></i>
                 <span class="nav-label">${menu.title}</span>
-                <span class="fa arrow"></span>
+                <c:if test="${menu.menu_type == '0'}">
+                    <span class="fa arrow"></span>
+                </c:if>
             </a>
         </c:when>
         <c:otherwise>

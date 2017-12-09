@@ -32,7 +32,7 @@
                 <div class="col-sm-12">
                     <!-- Example Events -->
                     <div class="example-wrap">
-                        <h4 class="example-title">用户管理</h4>
+                        <h4 class="example-title">系统用户管理</h4>
                         <div class="example">
                             <div class="btn-group hidden-xs" id="exampleTableEventsToolbar" role="group">
                                 <button type="button" class="btn btn-outline btn-default" onclick="doAdd();">

@@ -52,13 +52,17 @@ public class RoleServiceImpl implements RoleService {
     }
 
     @Override
-    public int countRole(String name)
+    public int countRole(String name, Integer userId)
     {
         RoleExample roleExample = new RoleExample();
         RoleExample.Criteria criteria = roleExample.createCriteria();
         if (StringUtils.isNotBlank(name))
         {
             criteria.andNameLike(name);
+        }
+        if (userId != -1)
+        {
+            criteria.andCreatorEqualTo(userId);
         }
         return roleMapper.countByExample(roleExample);
     }
