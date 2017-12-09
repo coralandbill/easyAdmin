@@ -26,49 +26,26 @@
 <div class="wrapper wrapper-content animated fadeInRight">
     <!-- Panel Other -->
     <div class="ibox float-e-margins">
-        <div class="ibox-title">
-            <h5>其他</h5>
-            <div class="ibox-tools">
-                <a class="collapse-link">
-                    <i class="fa fa-chevron-up"></i>
-                </a>
-                <a class="dropdown-toggle" data-toggle="dropdown" href="#">
-                    <i class="fa fa-wrench"></i>
-                </a>
-                <ul class="dropdown-menu dropdown-user">
-                    <li><a href="#">选项1</a>
-                    </li>
-                    <li><a href="#">选项2</a>
-                    </li>
-                </ul>
-                <a class="close-link">
-                    <i class="fa fa-times"></i>
-                </a>
-            </div>
-        </div>
         <div class="ibox-content">
             <div class="row row-lg">
                 <div class="col-sm-12">
                     <!-- Example Events -->
                     <div class="example-wrap">
-                        <h4 class="example-title">事件</h4>
+                        <h4 class="example-title">角色管理</h4>
                         <div class="example">
-                            <div class="alert alert-success" id="examplebtTableEventsResult" role="alert">
-                                事件结果
-                            </div>
                             <div class="btn-group hidden-xs" id="exampleTableEventsToolbar" role="group">
                                 <button type="button" class="btn btn-outline btn-default" data-toggle="modal"
                                         data-target="#exampleModal">
                                     <i class="glyphicon glyphicon-plus" aria-hidden="true">添加</i>
                                 </button>
-                                <button type="button" class="btn btn-outline btn-default">
+                                <%--<button type="button" class="btn btn-outline btn-default">
                                     <i class="glyphicon glyphicon-trash" aria-hidden="true">删除</i>
-                                </button>
+                                </button>--%>
                             </div>
                             <table id="exampleTableEvents" data-mobile-responsive="true">
                                 <thead>
                                 <tr>
-                                    <th data-field="state" data-checkbox="true"></th>
+                                    <%--<th data-field="state" data-checkbox="true"></th>--%>
                                     <th data-field="id">ID</th>
                                     <th data-field="name">名称</th>
                                     <th data-field="description">描述</th>

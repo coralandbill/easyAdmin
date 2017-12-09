@@ -52,7 +52,7 @@ public class AdminUserServiceImpl implements AdminUserService {
         AdminUserExample.Criteria criteria = adminUserExample.createCriteria();
         if (StringUtils.isNotBlank(name))
         {
-            criteria.andNameLike(name);
+            criteria.andNameLike("%" + name + "%");
         }
         if (createId != -1)
         {

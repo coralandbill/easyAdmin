@@ -36,15 +36,15 @@ public class RoleAjaxController {
     private RoleMenuService roleMenuService;
 
     @RequestMapping("/listRole")
-    public String listRole(String name, Integer limit, Integer offset, HttpSession session)
+    public String listRole(String search, Integer limit, Integer offset, HttpSession session)
     {
         AdminUser adminUser = (AdminUser) session.getAttribute(AdminUser.SESSION_ID);
-        if (name == null) name = "";
+        if (search == null) search = "";
 
         JSONObject jsonObject = new JSONObject();
 
         List<Map> resultList = new ArrayList<>();
-        List<Role> roleList = roleService.listRole(offset, limit, name, adminUser.getId());
+        List<Role> roleList = roleService.listRole(offset, limit, search, adminUser.getId());
         BeanMap roleBeanMap = BeanMap.create(new Role());
         for (Role role : roleList)
         {
@@ -58,7 +58,7 @@ public class RoleAjaxController {
             resultList.add(branchInstMap);
         }
 
-        int roleCnt = roleService.countRole(name);
+        int roleCnt = roleService.countRole(search);
 
         jsonObject.put("rows", resultList);
         jsonObject.put("total", roleCnt);

@@ -40,7 +40,7 @@ public class RoleServiceImpl implements RoleService {
         RoleExample.Criteria criteria = roleExample.createCriteria();
         if (StringUtils.isNotBlank(name))
         {
-            criteria.andNameLike(name);
+            criteria.andNameLike("%" + name + "%");
         }
         if (userId != -1)
         {
