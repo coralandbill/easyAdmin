@@ -20,6 +20,7 @@
     <link href="/css/animate.min.css" rel="stylesheet">
     <link href="/css/style.min862f.css?v=4.1.0" rel="stylesheet">
     <link href="/css/simditor.css" rel="stylesheet">
+    <link href="/css/bootstrap-datetimepicker.min.css" rel="stylesheet">
 
 </head>
 
@@ -47,13 +48,14 @@
                     </h5>
                 </div>
                 <div class="ibox-content">
-                    <form method="get" class="form-horizontal">
+                    <form method="post" id="newsForm" action="" class="form-horizontal">
                         <div class="form-group">
                             <label class="col-sm-2 control-label">标题</label>
                             <div class="col-sm-10">
-                                <input type="text" maxlength="100" name="title" class="form-control">
+                                <input type="text" maxlength="100" id="title" name="title" class="form-control">
                             </div>
                         </div>
+                        <c:if test="${newsType == 1}">
                         <div class="hr-line-dashed"></div>
                         <div class="form-group">
                             <label class="col-sm-2 control-label">来源</label>
@@ -62,32 +64,36 @@
                                 <span class="help-block m-b-none">新闻来源地</span>
                             </div>
                         </div>
+                        </c:if>
                         <div class="hr-line-dashed"></div>
                         <div class="form-group">
                             <label class="col-sm-2 control-label">封面图片</label>
                             <div class="col-sm-10">
-                                <input type="text" class="form-control" name="imgUrl">
-                                <span class="help-block m-b-none">封面图片用于展示在新闻列表</span>
+                                <input type="file" class="form-control" id="imgFile" name="imgFile">
+                                <span class="help-block m-b-none">封面图片用于展示在${newsType == 1 ? "新闻" : "活动"}列表</span>
                             </div>
                         </div>
                         <div class="hr-line-dashed"></div>
                         <div class="form-group">
-                            <label class="col-sm-2 control-label">新闻日期</label>
+                            <label class="col-sm-2 control-label">${newsType == 1 ? "新闻" : "活动"}日期</label>
                             <div class="col-sm-10">
-                                <input type="text" placeholder="新闻日期" name="newsDate" class="form-control">
+                                <div class="input-group date">
+                                    <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
+                                    <input type="text" class="form-control" id="newsDate" name="newsDate" value="${initDate}">
+                                </div>
                             </div>
                         </div>
                         <div class="form-group">
                             <label class="col-sm-2 control-label">内容</label>
                             <div class="col-sm-10">
-                                <textarea id="editor" placeholder="请输入内容" autofocus></textarea>
+                                <textarea id="editor" name="content" placeholder="请输入内容" autofocus></textarea>
                             </div>
                         </div>
                         <div class="hr-line-dashed"></div>
                         <div class="form-group">
                             <div class="col-sm-4 col-sm-offset-2">
                                 <button class="btn btn-primary" type="submit">保存内容</button>
-                                <button class="btn btn-white" type="submit">取消</button>
+                                <button class="btn btn-white" type="button" onclick="javascript:location.href='/admin/news/index.do?newsType=${newsType}';">取消</button>
                             </div>
                         </div>
                     </form>
@@ -140,10 +146,17 @@
 <script src="/scripts/jquery.min.js?v=2.1.4"></script>
 <script src="/scripts/bootstrap.min.js?v=3.3.6"></script>
 <script src="/scripts/content.min.js?v=1.0.0"></script>
+<script src="/scripts/plugins/jquery-validate/jquery.validate.min.js"></script>
+<script src="/scripts/plugins/jquery-validate/messages_zh.min.js"></script>
+<script src="/scripts/plugins/layer/layer.min.js"></script>
+<!--simditor-->
 <script src="/scripts/module.js"></script>
 <script src="/scripts/hotkeys.js"></script>
 <script src="/scripts/uploader.js"></script>
 <script src="/scripts/simditor.js"></script>
+<!--simditor-->
+<script src="/scripts/bootstrap-prettyfile.js"></script>
+<script src="/scripts/bootstrap-datetimepicker.min.js"></script>
 <script>
     var toolbar = [
         'title',
@@ -175,6 +188,52 @@
             leaveConfirm: '正在上传文件'
         }
         //optional options
+    });
+    $(document).ready(function () {
+        $.fn.datetimepicker.dates['zh-CN'] = {
+            days: ["星期日", "星期一", "星期二", "星期三", "星期四", "星期五", "星期六", "星期日"],
+            daysShort: ["周日", "周一", "周二", "周三", "周四", "周五", "周六", "周日"],
+            daysMin:  ["日", "一", "二", "三", "四", "五", "六", "日"],
+            months: ["一月", "二月", "三月", "四月", "五月", "六月", "七月", "八月", "九月", "十月", "十一月", "十二月"],
+            monthsShort: ["一月", "二月", "三月", "四月", "五月", "六月", "七月", "八月", "九月", "十月", "十一月", "十二月"],
+            today: "今天",
+            suffix: [],
+            meridiem: ["上午", "下午"]
+        };
+        $('input[type="file"][name="imgFile"]').prettyFile({
+            text: "选择图片"
+        });
+
+        $( '#newsDate' ).datetimepicker(
+            {
+                startDate:new Date(),
+                minView: "month",
+                autoclose: true,
+                format: "yyyy-mm-dd",
+                language: 'zh-CN'
+            }
+        );
+    });
+    $("#newsForm").validate({
+        rules: {
+            title: "required",
+            newsDate:"required"
+        },
+        messages: {
+            title: "请输入名称",
+            newsDate:"请选择新闻日期"
+        },
+        submitHandler: function () {
+            var content = editor.getValue();
+            if(content.length == 0)
+            {
+                layer.msg("请输入内容信息",{time:10000});
+            }
+            else
+            {
+                $("#newsForm").submit();
+            }
+        }
     });
 </script>
 </body>

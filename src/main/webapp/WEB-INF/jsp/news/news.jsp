@@ -68,8 +68,6 @@
 <script src="/scripts/bootstrap.min.js?v=3.3.6"></script>
 <script src="/scripts/plugins/bootstrap-table/bootstrap-table.min.js"></script>
 <script src="/scripts/plugins/bootstrap-table/locale/bootstrap-table-zh-CN.min.js"></script>
-<script src="/scripts/plugins/jquery-validate/jquery.validate.min.js"></script>
-<script src="/scripts/plugins/jquery-validate/messages_zh.min.js"></script>
 <script src="/scripts/plugins/layer/layer.min.js"></script>
 <script>
 
