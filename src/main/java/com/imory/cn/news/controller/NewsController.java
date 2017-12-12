@@ -105,7 +105,7 @@ public class NewsController {
         } else {
             jsonObject.put("success", newsService.saveNews(news));
         }
-        return "redirect:/admin/news/index.do";
+        return "redirect:/admin/news/index.do?newsType=" + newsType;
     }
 
     @RequestMapping("/addNews")

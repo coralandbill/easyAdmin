@@ -46,18 +46,16 @@ public class NewsAjaxController {
     private NewsService newsService;
 
     @RequestMapping("/listNews")
-    public String listNews(String search, Integer limit, Integer offset, HttpSession session)
-    {
+    public String listNews(String search, Integer limit, Integer offset, Integer newsType, HttpSession session) {
         AdminUser adminUser = (AdminUser) session.getAttribute(AdminUser.SESSION_ID);
         if (search == null) search = "";
 
         JSONObject jsonObject = new JSONObject();
 
         List<Map> resultList = new ArrayList<>();
-        List<News> newsList = newsService.listNews(offset, limit, search, adminUser.getId());
+        List<News> newsList = newsService.listNews(offset, limit, search, adminUser.getId(), newsType);
         BeanMap roleBeanMap = BeanMap.create(new News());
-        for (News news : newsList)
-        {
+        for (News news : newsList) {
             roleBeanMap.setBean(news);
             Map branchInstMap = new HashMap<>();
             branchInstMap.put("createTimeStr", new DateTime(news.getCreateTime()).toString("yyyy-MM-dd HH:mm"));
@@ -66,7 +64,7 @@ public class NewsAjaxController {
             resultList.add(branchInstMap);
         }
 
-        int roleCnt = newsService.countNews(search, adminUser.getId());
+        int roleCnt = newsService.countNews(search, adminUser.getId(),newsType);
         jsonObject.put("rows", resultList);
         jsonObject.put("total", roleCnt);
         jsonObject.put("page", GetTotalPageNumUtil.getTotalPage(roleCnt, limit));
@@ -75,20 +73,17 @@ public class NewsAjaxController {
     }
 
     @RequestMapping("/getById")
-    public String getById(Integer id)
-    {
+    public String getById(Integer id) {
         JSONObject jsonObject = new JSONObject();
         News news = newsService.selectById(id);
-        if (news != null)
-        {
+        if (news != null) {
             BeanMap roleBeanMap = BeanMap.create(new News());
             roleBeanMap.setBean(news);
             Map branchInstMap = new HashMap<>();
             branchInstMap.putAll(roleBeanMap);
             jsonObject.put("success", Boolean.TRUE);
             jsonObject.put("news", branchInstMap);
-        } else
-        {
+        } else {
             jsonObject.put("success", Boolean.FALSE);
         }
         return jsonObject.toString();
@@ -96,34 +91,28 @@ public class NewsAjaxController {
 
 
     @RequestMapping("/uploadImg")
-    public String uploadImg(@RequestParam MultipartFile file)
-    {
+    public String uploadImg(@RequestParam MultipartFile file) {
         JSONObject jsonObject = new JSONObject();
         String imgName = new Date().getTime() + ".jpg";
-        if (!imgDir.endsWith(File.separator))
-        {
+        if (!imgDir.endsWith(File.separator)) {
             imgDir = imgDir + File.separator;
         }
-        if (!imgDir_BY.endsWith(File.separator))
-        {
+        if (!imgDir_BY.endsWith(File.separator)) {
             imgDir_BY = imgDir_BY + File.separator;
         }
         String uploadDir = imgDir + "images" + File.separator;
         String uploadDir_BY = imgDir_BY + "images" + File.separator;
         File newFile = new File(uploadDir);
-        if (!newFile.exists())
-        {
+        if (!newFile.exists()) {
             newFile.mkdirs();
         }
-        try
-        {
+        try {
             FileUtils.copyInputStreamToFile(file.getInputStream(), new File(uploadDir, imgName));
             FileUtils.copyFile(new File(uploadDir + imgName), new File(uploadDir_BY + imgName));
             jsonObject.put("success", true);
             jsonObject.put("imgUrl", imgUrl + "/images/" + imgName);
             jsonObject.put("file_path", imgUrl + "/images/" + imgName);
-        } catch (IOException e)
-        {
+        } catch (IOException e) {
             e.printStackTrace();
             jsonObject.put("success", false);
         }

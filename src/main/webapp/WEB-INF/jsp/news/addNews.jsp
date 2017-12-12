@@ -75,10 +75,12 @@
                                 <span class="help-block m-b-none">封面图片用于展示在${newsType == 1 ? "新闻" : "活动"}列表</span>
                             </div>
                         </div>
+                        <c:if test="${not empty news.imgUrl}">
                         <div class="form-group">
                             <label class="col-sm-2 control-label"></label>
                             <img src="${news.imgUrl}" style="width: 200px;height: 100px;"/>
                         </div>
+                        </c:if>
                         <div class="hr-line-dashed"></div>
                         <div class="form-group">
                             <label class="col-sm-2 control-label">${newsType == 1 ? "新闻" : "活动"}日期</label>

@@ -31,7 +31,7 @@
                 <div class="col-sm-12">
                     <!-- Example Events -->
                     <div class="example-wrap">
-                        <h4 class="example-title">活动管理</h4>
+                        <h4 class="example-title">${newsType == 1 ? '新闻' : '活动'}管理</h4>
                         <div class="example">
                             <div class="btn-group hidden-xs" id="exampleTableEventsToolbar" role="group">
                                 <button type="button"
@@ -51,7 +51,7 @@
                                     <th data-field="title">标题</th>
                                     <th data-field="source">来源</th>
                                     <th data-field="imgUrl">封面图片</th>
-                                    <th data-field="newsTimeStr">新闻日期</th>
+                                    <th data-field="newsTimeStr">${newsType == 1 ? '新闻' : '活动'}日期</th>
                                     <th data-field="createTimeStr">创建时间</th>
                                     <th data-field="id" data-formatter="czFun" data-events="actionEvents">操作</th>
                                 </tr>
@@ -87,7 +87,7 @@
     }
 
     $("#exampleTableEvents").bootstrapTable({
-        url: "/admin/newsAjax/listNews.do",
+        url: "/admin/newsAjax/listNews.do?newsType=${newsType}",
         dataType: "json",
         search: !0,
         pagination: !0,
