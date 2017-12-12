@@ -48,7 +48,9 @@
                     </h5>
                 </div>
                 <div class="ibox-content">
-                    <form method="post" id="newsForm" action="" class="form-horizontal">
+                    <form method="post" id="newsForm" action="/admin/news/saveNews.do" class="form-horizontal">
+                        <input type="hidden" name="newsType" value="${newsType}"/>
+                        <input type="hidden" name="newsId" value="${newsId}"/>
                         <div class="form-group">
                             <label class="col-sm-2 control-label">标题</label>
                             <div class="col-sm-10">
@@ -84,9 +86,10 @@
                             </div>
                         </div>
                         <div class="form-group">
+                            <input type="hidden" id="content" name="content"/>
                             <label class="col-sm-2 control-label">内容</label>
                             <div class="col-sm-10">
-                                <textarea id="editor" name="content" placeholder="请输入内容" autofocus></textarea>
+                                <textarea id="editor" placeholder="请输入内容" autofocus></textarea>
                             </div>
                         </div>
                         <div class="hr-line-dashed"></div>
@@ -231,6 +234,7 @@
             }
             else
             {
+                $("#content").val(content);
                 $("#newsForm").submit();
             }
         }

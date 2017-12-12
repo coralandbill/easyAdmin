@@ -92,6 +92,9 @@ public class NewsController {
         if (newsId == null)
         {
             model.addAttribute("initDate", new DateTime(new Date()).toString("yyyy-MM-dd"));
+        } else
+        {
+            model.addAttribute("newsId", newsId);
         }
         model.addAttribute("newsType", newsType);
         return "news/addNews";
