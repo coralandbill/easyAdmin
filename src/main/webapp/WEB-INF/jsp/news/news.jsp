@@ -34,7 +34,9 @@
                         <h4 class="example-title">活动管理</h4>
                         <div class="example">
                             <div class="btn-group hidden-xs" id="exampleTableEventsToolbar" role="group">
-                                <button type="button" onclick="javascript:location.href='/admin/news/addNews.do?newsType=${newsType}';" class="btn btn-outline btn-default">
+                                <button type="button"
+                                        onclick="javascript:location.href='/admin/news/addNews.do?newsType=${newsType}';"
+                                        class="btn btn-outline btn-default">
                                     <i class="glyphicon glyphicon-plus" aria-hidden="true">添加</i>
                                 </button>
                                 <%--<button type="button" class="btn btn-outline btn-default">
@@ -49,7 +51,7 @@
                                     <th data-field="title">标题</th>
                                     <th data-field="source">来源</th>
                                     <th data-field="imgUrl">封面图片</th>
-                                    <th data-field="newsDate">新闻日期</th>
+                                    <th data-field="newsTimeStr">新闻日期</th>
                                     <th data-field="createTimeStr">创建时间</th>
                                     <th data-field="id" data-formatter="czFun" data-events="actionEvents">操作</th>
                                 </tr>
@@ -76,8 +78,12 @@
     }
 
     function czFun(value) {
-        return '<button type="button" onclick="editRole(' + value + ');" class="btn btn-outline btn-primary edit">编辑</button>' +
-            '<button type="button" onclick="setMenu(' + value + ');" style="margin-left: 10px;" class="btn btn-outline btn-success delete">配置</button>';
+        return '<button type="button" onclick="editNews(' + value + ');" class="btn btn-outline btn-primary edit">编辑</button>' +
+            '<button type="button" onclick="setMenu(' + value + ');" style="margin-left: 10px;" class="btn btn-outline btn-danger delete">删除</button>';
+    }
+
+    function editNews(value) {
+        window.location.href = "/admin/news/addNews.do?newsId=" + value + "&newsType=${newsType}";
     }
 
     $("#exampleTableEvents").bootstrapTable({

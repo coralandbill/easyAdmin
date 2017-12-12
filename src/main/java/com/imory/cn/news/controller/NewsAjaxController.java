@@ -61,6 +61,7 @@ public class NewsAjaxController {
             roleBeanMap.setBean(news);
             Map branchInstMap = new HashMap<>();
             branchInstMap.put("createTimeStr", new DateTime(news.getCreateTime()).toString("yyyy-MM-dd HH:mm"));
+            branchInstMap.put("newsTimeStr", new DateTime(news.getNewsDate()).toString("yyyy-MM-dd"));
             branchInstMap.putAll(roleBeanMap);
             resultList.add(branchInstMap);
         }

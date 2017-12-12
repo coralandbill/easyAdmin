@@ -38,6 +38,12 @@ public class NewsServiceImpl implements NewsService {
     }
 
     @Override
+    public boolean updateNewsWithBLOB(News news)
+    {
+        return newsMapper.updateByPrimaryKeyWithBLOBs(news) > 0;
+    }
+
+    @Override
     public List<News> listNews(int startPos, int pageSize, String title, Integer userId)
     {
         NewsExample newsExample = new NewsExample();

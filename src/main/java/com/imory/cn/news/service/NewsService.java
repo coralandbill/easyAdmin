@@ -19,6 +19,8 @@ public interface NewsService {
 
     boolean updateNews(News news);
 
+    boolean updateNewsWithBLOB(News news);
+
     List<News> listNews(int startPos, int pageSize, String title, Integer userId);
 
     int countNews(String title, Integer userId);

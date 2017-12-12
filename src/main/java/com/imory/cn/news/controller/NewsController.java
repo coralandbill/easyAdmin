@@ -3,17 +3,21 @@ package com.imory.cn.news.controller;
 import com.imory.cn.annotation.SessionCheck;
 import com.imory.cn.news.dto.News;
 import com.imory.cn.news.service.NewsService;
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormat;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.Date;
 
 /**
@@ -28,58 +32,77 @@ import java.util.Date;
 @RequestMapping("admin/news")
 @Controller
 public class NewsController {
+    @Value("#{runtimeProperties['img.uploadfiledir']}")
+    private String imgDir;
+
+    @Value("#{runtimeProperties['img.uploadfiledir_by']}")
+    private String imgDir_BY;
+
+    @Value("#{runtimeProperties['img.url']}")
+    private String imgUrl;
 
     @Autowired
     private NewsService newsService;
 
     @RequestMapping("/index")
     @SessionCheck
-    public String index(Integer newsType, Model model)
-    {
+    public String index(Integer newsType, Model model) {
         model.addAttribute("newsType", newsType);
         return "news/news";
     }
 
     @RequestMapping("/saveNews")
-    public String saveNews(@RequestParam MultipartFile imgFile, String title, String imgUrl, String source,
-                           String content, String newsDate, Integer newsType, Integer newsId)
-    {
+    public String saveNews(@RequestParam MultipartFile imgFile, String title, String source,
+                           String content, String newsDate, Integer newsType, Integer newsId) {
         JSONObject jsonObject = new JSONObject();
+        String uploadImgUrl = "";
+        if (imgFile != null && imgFile.getSize() > 0) {
+            String imgName = new Date().getTime() + ".jpg";
+            if (!imgDir.endsWith(File.separator)) {
+                imgDir = imgDir + File.separator;
+            }
+            if (!imgDir_BY.endsWith(File.separator)) {
+                imgDir_BY = imgDir_BY + File.separator;
+            }
+            String uploadDir = imgDir + "images/news" + File.separator;
+            String uploadDir_BY = imgDir_BY + "images/news" + File.separator;
+            File newFile = new File(uploadDir);
+            if (!newFile.exists()) {
+                newFile.mkdirs();
+            }
+            try {
+                FileUtils.copyInputStreamToFile(imgFile.getInputStream(), new File(uploadDir, imgName));
+                FileUtils.copyFile(new File(uploadDir + imgName), new File(uploadDir_BY + imgName));
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            uploadImgUrl = imgUrl + "/images/news/" + imgName;
+        }
         News news;
-        if (newsId != null)
-        {
+        if (newsId != null) {
             news = newsService.selectById(newsId);
-        } else
-        {
+        } else {
             news = new News();
         }
-        if (StringUtils.isNotBlank(title))
-        {
+        if (StringUtils.isNotBlank(title)) {
             news.setTitle(title);
         }
-        if (StringUtils.isNotBlank(imgUrl))
-        {
-            news.setImgUrl(imgUrl);
+        if (StringUtils.isNotBlank(uploadImgUrl)) {
+            news.setImgUrl(uploadImgUrl);
         }
-        if (StringUtils.isNotBlank(source))
-        {
+        if (StringUtils.isNotBlank(source)) {
             news.setSource(source);
         }
-        if (StringUtils.isNotBlank(content))
-        {
+        if (StringUtils.isNotBlank(content)) {
             news.setContent(content);
         }
-        if (StringUtils.isNotBlank(newsDate))
-        {
+        if (StringUtils.isNotBlank(newsDate)) {
             news.setNewsDate(DateTime.parse(newsDate, DateTimeFormat.forPattern("yyyy-MM-dd")).toDate());
         }
         news.setNewsType(newsType);
-
-        if (newsId != null)
-        {
-            jsonObject.put("success", newsService.updateNews(news));
-        } else
-        {
+        if (newsId != null) {
+            jsonObject.put("success", newsService.updateNewsWithBLOB(news));
+        } else {
             jsonObject.put("success", newsService.saveNews(news));
         }
         return "redirect:/admin/news/index.do";
@@ -87,14 +110,14 @@ public class NewsController {
 
     @RequestMapping("/addNews")
     @SessionCheck
-    public String addNews(Integer newsId, Integer newsType, Model model)
-    {
-        if (newsId == null)
-        {
+    public String addNews(Integer newsId, Integer newsType, Model model) {
+        if (newsId == null) {
             model.addAttribute("initDate", new DateTime(new Date()).toString("yyyy-MM-dd"));
-        } else
-        {
+        } else {
+            News news = newsService.selectById(newsId);
+            model.addAttribute("initDate", new DateTime(news.getNewsDate()).toString("yyyy-MM-dd"));
             model.addAttribute("newsId", newsId);
+            model.addAttribute("news", news);
         }
         model.addAttribute("newsType", newsType);
         return "news/addNews";

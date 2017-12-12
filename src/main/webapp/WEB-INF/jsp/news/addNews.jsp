@@ -48,13 +48,13 @@
                     </h5>
                 </div>
                 <div class="ibox-content">
-                    <form method="post" id="newsForm" action="/admin/news/saveNews.do" class="form-horizontal">
+                    <form method="post" id="newsForm" action="/admin/news/saveNews.do" class="form-horizontal" enctype="multipart/form-data">
                         <input type="hidden" name="newsType" value="${newsType}"/>
                         <input type="hidden" name="newsId" value="${newsId}"/>
                         <div class="form-group">
                             <label class="col-sm-2 control-label">标题</label>
                             <div class="col-sm-10">
-                                <input type="text" maxlength="100" id="title" name="title" class="form-control">
+                                <input type="text" maxlength="100" id="title" name="title" value="${news.title}" class="form-control">
                             </div>
                         </div>
                         <c:if test="${newsType == 1}">
@@ -62,7 +62,7 @@
                         <div class="form-group">
                             <label class="col-sm-2 control-label">来源</label>
                             <div class="col-sm-10">
-                                <input type="text" class="form-control" name="source" maxlength="20">
+                                <input type="text" class="form-control" name="source" value="${news.source}" maxlength="20">
                                 <span class="help-block m-b-none">新闻来源地</span>
                             </div>
                         </div>
@@ -74,6 +74,10 @@
                                 <input type="file" class="form-control" id="imgFile" name="imgFile">
                                 <span class="help-block m-b-none">封面图片用于展示在${newsType == 1 ? "新闻" : "活动"}列表</span>
                             </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label"></label>
+                            <img src="${news.imgUrl}" style="width: 200px;height: 100px;"/>
                         </div>
                         <div class="hr-line-dashed"></div>
                         <div class="form-group">
@@ -89,7 +93,7 @@
                             <input type="hidden" id="content" name="content"/>
                             <label class="col-sm-2 control-label">内容</label>
                             <div class="col-sm-10">
-                                <textarea id="editor" placeholder="请输入内容" autofocus></textarea>
+                                <textarea id="editor" placeholder="请输入内容" autofocus>${news.content}</textarea>
                             </div>
                         </div>
                         <div class="hr-line-dashed"></div>
