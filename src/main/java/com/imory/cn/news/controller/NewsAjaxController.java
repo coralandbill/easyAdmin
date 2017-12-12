@@ -64,7 +64,7 @@ public class NewsAjaxController {
             resultList.add(branchInstMap);
         }
 
-        int roleCnt = newsService.countNews(search, adminUser.getId(),newsType);
+        int roleCnt = newsService.countNews(search, adminUser.getId(), newsType);
         jsonObject.put("rows", resultList);
         jsonObject.put("total", roleCnt);
         jsonObject.put("page", GetTotalPageNumUtil.getTotalPage(roleCnt, limit));
@@ -89,6 +89,12 @@ public class NewsAjaxController {
         return jsonObject.toString();
     }
 
+    @RequestMapping("/deleteNews")
+    public String deleteNews(String ids) {
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put("success", newsService.deleteNews(ids));
+        return jsonObject.toString();
+    }
 
     @RequestMapping("/uploadImg")
     public String uploadImg(@RequestParam MultipartFile file) {

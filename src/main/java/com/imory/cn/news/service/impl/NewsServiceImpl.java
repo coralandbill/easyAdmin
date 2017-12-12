@@ -74,4 +74,13 @@ public class NewsServiceImpl implements NewsService {
     public News selectById(Integer id) {
         return newsMapper.selectByPrimaryKey(id);
     }
+
+    @Override
+    public boolean deleteNews(String ids) {
+        String[] idArr = ids.split(",");
+        for (String id : idArr) {
+            newsMapper.deleteByPrimaryKey(Integer.valueOf(id));
+        }
+        return true;
+    }
 }

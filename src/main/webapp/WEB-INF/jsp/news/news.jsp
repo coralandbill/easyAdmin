@@ -73,17 +73,48 @@
 <script src="/scripts/plugins/layer/layer.min.js"></script>
 <script>
 
-    function setMenu(roleId) {
-        location.href = '/admin/role/menu.do?roleId=' + roleId;
-    }
-
     function czFun(value) {
         return '<button type="button" onclick="editNews(' + value + ');" class="btn btn-outline btn-primary edit">编辑</button>' +
-            '<button type="button" onclick="setMenu(' + value + ');" style="margin-left: 10px;" class="btn btn-outline btn-danger delete">删除</button>';
+            '<button type="button" onclick="deleteNews(' + value + ');" style="margin-left: 10px;" class="btn btn-outline btn-danger delete">删除</button>';
     }
 
     function editNews(value) {
         window.location.href = "/admin/news/addNews.do?newsId=" + value + "&newsType=${newsType}";
+    }
+
+    function deleteNews(value) {
+        layer.confirm('确定删除？', {
+            btn: ['确定', '取消'] //按钮
+        }, function () {
+            $.ajax({
+                url: "/admin/newsAjax/deleteNews.do",
+                contentType: "application/x-www-form-urlencoded; charset=utf-8",
+                dataType: "json",
+                type: "POST",
+                data: {
+                    ids: value
+                },
+                success: function (data) {
+                    if (data.success) {
+                        layer.msg('操作成功', {
+                            time: 1000 //2秒关闭（如果不配置，默认是3秒）
+                        }, function () {
+                            $('#exampleTableEvents').bootstrapTable(
+                                "refresh",
+                                {
+                                    url: "/admin/newsAjax/listNews.do?newsType=${newsType}",
+                                }
+                            );
+                        });
+                    }
+                    else {
+                        layer.msg("操作失败");
+                    }
+                }
+            });
+        }, function () {
+
+        });
     }
 
     $("#exampleTableEvents").bootstrapTable({

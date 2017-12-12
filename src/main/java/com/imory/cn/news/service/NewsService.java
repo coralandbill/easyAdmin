@@ -27,4 +27,6 @@ public interface NewsService {
 
     News selectById(Integer id);
 
+    boolean deleteNews(String ids);
+
 }
