@@ -19,10 +19,14 @@ public interface NewsService {
 
     boolean updateNews(News news);
 
-    List<News> listNews(int startPos, int pageSize, String title, Integer userId);
+    boolean updateNewsWithBLOB(News news);
 
-    int countNews(String title, Integer userId);
+    List<News> listNews(int startPos, int pageSize, String title, Integer userId, Integer newsType);
+
+    int countNews(String title, Integer userId, Integer newsType);
 
     News selectById(Integer id);
+
+    boolean deleteNews(String ids);
 
 }

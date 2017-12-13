@@ -31,10 +31,12 @@
                 <div class="col-sm-12">
                     <!-- Example Events -->
                     <div class="example-wrap">
-                        <h4 class="example-title">活动管理</h4>
+                        <h4 class="example-title">${newsType == 1 ? '新闻' : '活动'}管理</h4>
                         <div class="example">
                             <div class="btn-group hidden-xs" id="exampleTableEventsToolbar" role="group">
-                                <button type="button" onclick="javascript:location.href='/admin/news/addNews.do?newsType=${newsType}';" class="btn btn-outline btn-default">
+                                <button type="button"
+                                        onclick="javascript:location.href='/admin/news/addNews.do?newsType=${newsType}';"
+                                        class="btn btn-outline btn-default">
                                     <i class="glyphicon glyphicon-plus" aria-hidden="true">添加</i>
                                 </button>
                                 <%--<button type="button" class="btn btn-outline btn-default">
@@ -49,7 +51,7 @@
                                     <th data-field="title">标题</th>
                                     <th data-field="source">来源</th>
                                     <th data-field="imgUrl">封面图片</th>
-                                    <th data-field="newsDate">新闻日期</th>
+                                    <th data-field="newsTimeStr">${newsType == 1 ? '新闻' : '活动'}日期</th>
                                     <th data-field="createTimeStr">创建时间</th>
                                     <th data-field="id" data-formatter="czFun" data-events="actionEvents">操作</th>
                                 </tr>
@@ -71,17 +73,52 @@
 <script src="/scripts/plugins/layer/layer.min.js"></script>
 <script>
 
-    function setMenu(roleId) {
-        location.href = '/admin/role/menu.do?roleId=' + roleId;
+    function czFun(value) {
+        return '<button type="button" onclick="editNews(' + value + ');" class="btn btn-outline btn-primary edit">编辑</button>' +
+            '<button type="button" onclick="deleteNews(' + value + ');" style="margin-left: 10px;" class="btn btn-outline btn-danger delete">删除</button>';
     }
 
-    function czFun(value) {
-        return '<button type="button" onclick="editRole(' + value + ');" class="btn btn-outline btn-primary edit">编辑</button>' +
-            '<button type="button" onclick="setMenu(' + value + ');" style="margin-left: 10px;" class="btn btn-outline btn-success delete">配置</button>';
+    function editNews(value) {
+        window.location.href = "/admin/news/addNews.do?newsId=" + value + "&newsType=${newsType}";
+    }
+
+    function deleteNews(value) {
+        layer.confirm('确定删除？', {
+            btn: ['确定', '取消'] //按钮
+        }, function () {
+            $.ajax({
+                url: "/admin/newsAjax/deleteNews.do",
+                contentType: "application/x-www-form-urlencoded; charset=utf-8",
+                dataType: "json",
+                type: "POST",
+                data: {
+                    ids: value
+                },
+                success: function (data) {
+                    if (data.success) {
+                        layer.msg('操作成功', {
+                            time: 1000 //2秒关闭（如果不配置，默认是3秒）
+                        }, function () {
+                            $('#exampleTableEvents').bootstrapTable(
+                                "refresh",
+                                {
+                                    url: "/admin/newsAjax/listNews.do?newsType=${newsType}",
+                                }
+                            );
+                        });
+                    }
+                    else {
+                        layer.msg("操作失败");
+                    }
+                }
+            });
+        }, function () {
+
+        });
     }
 
     $("#exampleTableEvents").bootstrapTable({
-        url: "/admin/newsAjax/listNews.do",
+        url: "/admin/newsAjax/listNews.do?newsType=${newsType}",
         dataType: "json",
         search: !0,
         pagination: !0,

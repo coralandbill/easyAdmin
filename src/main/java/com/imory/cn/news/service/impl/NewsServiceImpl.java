@@ -26,28 +26,29 @@ public class NewsServiceImpl implements NewsService {
     private NewsMapper newsMapper;
 
     @Override
-    public boolean saveNews(News news)
-    {
+    public boolean saveNews(News news) {
         return newsMapper.insert(news) > 0;
     }
 
     @Override
-    public boolean updateNews(News news)
-    {
+    public boolean updateNews(News news) {
         return newsMapper.updateByPrimaryKey(news) > 0;
     }
 
     @Override
-    public List<News> listNews(int startPos, int pageSize, String title, Integer userId)
-    {
+    public boolean updateNewsWithBLOB(News news) {
+        return newsMapper.updateByPrimaryKeyWithBLOBs(news) > 0;
+    }
+
+    @Override
+    public List<News> listNews(int startPos, int pageSize, String title, Integer userId, Integer newsType) {
         NewsExample newsExample = new NewsExample();
         NewsExample.Criteria criteria = newsExample.createCriteria();
-        if (StringUtils.isNotBlank(title))
-        {
+        criteria.andNewsTypeEqualTo(newsType);
+        if (StringUtils.isNotBlank(title)) {
             criteria.andTitleLike("%" + title + "%");
         }
-        if (userId != -1)
-        {
+        if (userId != -1) {
             criteria.andCreatorEqualTo(userId);
         }
         newsExample.setOrderByClause("createTime desc" + " limit " + startPos + "," + pageSize);
@@ -56,24 +57,30 @@ public class NewsServiceImpl implements NewsService {
     }
 
     @Override
-    public int countNews(String title, Integer userId)
-    {
+    public int countNews(String title, Integer userId, Integer newsType) {
         NewsExample newsExample = new NewsExample();
         NewsExample.Criteria criteria = newsExample.createCriteria();
-        if (StringUtils.isNotBlank(title))
-        {
+        criteria.andNewsTypeEqualTo(newsType);
+        if (StringUtils.isNotBlank(title)) {
             criteria.andTitleLike("%" + title + "%");
         }
-        if (userId != -1)
-        {
+        if (userId != -1) {
             criteria.andCreatorEqualTo(userId);
         }
         return newsMapper.countByExample(newsExample);
     }
 
     @Override
-    public News selectById(Integer id)
-    {
+    public News selectById(Integer id) {
         return newsMapper.selectByPrimaryKey(id);
+    }
+
+    @Override
+    public boolean deleteNews(String ids) {
+        String[] idArr = ids.split(",");
+        for (String id : idArr) {
+            newsMapper.deleteByPrimaryKey(Integer.valueOf(id));
+        }
+        return true;
     }
 }
