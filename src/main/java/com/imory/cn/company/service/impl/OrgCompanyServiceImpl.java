@@ -43,7 +43,6 @@ public class OrgCompanyServiceImpl implements OrgCompanyService {
     {
         int startPos = (int) paramsMap.get("startPos");
         int pageSize = (int) paramsMap.get("pageSize");
-        Integer creator = (Integer) paramsMap.get("creator");
         String companyName = (String) paramsMap.get("companyName");
         String street = (String) paramsMap.get("street");
 
@@ -53,7 +52,7 @@ public class OrgCompanyServiceImpl implements OrgCompanyService {
         {
             criteria.andCompanyNameLike("%" + companyName + "%");
         }
-        if (creator != -1 && StringUtils.isNotBlank(street))
+        if (StringUtils.isNotBlank(street))
         {
             criteria.andStreetLike("%" + street + "%");
         }
@@ -65,7 +64,6 @@ public class OrgCompanyServiceImpl implements OrgCompanyService {
     @Override
     public int countOrgCompany(Map<String, Object> paramsMap)
     {
-        Integer creator = (Integer) paramsMap.get("creator");
         String companyName = (String) paramsMap.get("companyName");
         String street = (String) paramsMap.get("street");
 
@@ -75,7 +73,7 @@ public class OrgCompanyServiceImpl implements OrgCompanyService {
         {
             criteria.andCompanyNameLike("%" + companyName + "%");
         }
-        if (creator != -1 && StringUtils.isNotBlank(street))
+        if (StringUtils.isNotBlank(street))
         {
             criteria.andStreetLike("%" + street + "%");
         }

@@ -1,5 +1,6 @@
 package com.imory.cn.company.controller;
 
+import com.imory.cn.admin.dto.AdminUser;
 import com.imory.cn.annotation.SessionCheck;
 import com.imory.cn.company.dto.OrgCompany;
 import com.imory.cn.company.service.OrgCompanyService;
@@ -10,6 +11,9 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+
+import javax.servlet.http.HttpSession;
+import java.util.Date;
 
 /**
  * <p>名称</p>
@@ -37,8 +41,10 @@ public class OrgCompanyController {
     @RequestMapping(value = "/saveOrgCompany", method = RequestMethod.POST)
     public String saveOrgCompany(String companyName, String logonId, String logonPsd,
                                  String province, String city, String code, String street,
-                                 String address, Integer orgCompanyId)
+                                 String address, Integer orgCompanyId, HttpSession session)
     {
+        AdminUser adminUser = (AdminUser) session.getAttribute(AdminUser.SESSION_ID);
+
         JSONObject jsonObject = new JSONObject();
         OrgCompany orgCompany;
         if (orgCompanyId != null)
@@ -47,7 +53,6 @@ public class OrgCompanyController {
         } else
         {
             orgCompany = new OrgCompany();
-            orgCompany.setState(0);
         }
 
         if (StringUtils.isNotBlank(companyName))
@@ -84,20 +89,29 @@ public class OrgCompanyController {
         }
         if (orgCompanyId != null)
         {
+            orgCompany.setState(0);
+            orgCompany.setCreateTime(new Date());
+            orgCompany.setCreator(adminUser.getId());
             jsonObject.put("success", orgCompanyService.updateOrgCompany(orgCompany));
         } else
         {
+            orgCompany.setUpdateTime(new Date());
             jsonObject.put("success", orgCompanyService.saveOrgCompany(orgCompany));
         }
 
-        return "redirect:/orgCompany/orgCompany/index.do";
+        return "redirect:/admin/orgCompany/index.do";
     }
 
     @RequestMapping("/editOrgCompany")
     @SessionCheck
     public String editOrgCompany(Integer orgCompanyId, Model model)
     {
-        model.addAttribute("orgCompanyId", orgCompanyId);
+        if (orgCompanyId != null)
+        {
+            OrgCompany orgCompany = orgCompanyService.selectById(orgCompanyId);
+            model.addAttribute("orgCompany", orgCompany);
+            model.addAttribute("orgCompanyId", orgCompanyId);
+        }
         return "orgCompany/addOrgCompany";
     }
 }

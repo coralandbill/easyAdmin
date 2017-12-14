@@ -1,6 +1,5 @@
 package com.imory.cn.company.controller;
 
-import com.imory.cn.admin.dto.AdminUser;
 import com.imory.cn.company.dto.OrgCompany;
 import com.imory.cn.company.service.OrgCompanyService;
 import com.imory.cn.utils.GetTotalPageNumUtil;
@@ -15,7 +14,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.servlet.http.HttpSession;
 import java.io.File;
 import java.io.IOException;
 import java.util.*;
@@ -46,12 +44,14 @@ public class OrgCompanyAjaxController {
     private OrgCompanyService orgCompanyService;
 
     @RequestMapping("/listOrgCompany")
-    public String listOrgCompany(String search, Integer limit, Integer offset, Integer newsType, HttpSession session)
+    public String listOrgCompany(String search, Integer limit, Integer offset)
     {
-        AdminUser adminUser = (AdminUser) session.getAttribute(AdminUser.SESSION_ID);
         if (search == null) search = "";
 
         Map<String, Object> paramsMap = new HashMap<>();
+        paramsMap.put("search", search);
+        paramsMap.put("startPos", offset);
+        paramsMap.put("pageSize", limit);
 
         JSONObject jsonObject = new JSONObject();
 
@@ -68,7 +68,7 @@ public class OrgCompanyAjaxController {
         }
 
         int roleCnt = orgCompanyService.countOrgCompany(paramsMap);
-        jsonObject.put("orgCompany", resultList);
+        jsonObject.put("rows", resultList);
         jsonObject.put("total", roleCnt);
         jsonObject.put("page", GetTotalPageNumUtil.getTotalPage(roleCnt, limit));
 
