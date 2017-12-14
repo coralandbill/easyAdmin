@@ -27,20 +27,17 @@ public class OrgCompanyServiceImpl implements OrgCompanyService {
     private OrgCompanyMapper orgCompanyMapper;
 
     @Override
-    public boolean saveOrgCompany(OrgCompany orgCompany)
-    {
+    public boolean saveOrgCompany(OrgCompany orgCompany) {
         return orgCompanyMapper.insert(orgCompany) > 0;
     }
 
     @Override
-    public boolean updateOrgCompany(OrgCompany orgCompany)
-    {
+    public boolean updateOrgCompany(OrgCompany orgCompany) {
         return orgCompanyMapper.updateByPrimaryKey(orgCompany) > 0;
     }
 
     @Override
-    public List<OrgCompany> listOrgCompany(Map<String, Object> paramsMap)
-    {
+    public List<OrgCompany> listOrgCompany(Map<String, Object> paramsMap) {
         int startPos = (int) paramsMap.get("startPos");
         int pageSize = (int) paramsMap.get("pageSize");
         String companyName = (String) paramsMap.get("companyName");
@@ -48,52 +45,46 @@ public class OrgCompanyServiceImpl implements OrgCompanyService {
 
         OrgCompanyExample orgCompanyExample = new OrgCompanyExample();
         OrgCompanyExample.Criteria criteria = orgCompanyExample.createCriteria();
-        if (StringUtils.isNotBlank(companyName))
-        {
+        if (StringUtils.isNotBlank(companyName)) {
             criteria.andCompanyNameLike("%" + companyName + "%");
         }
-        if (StringUtils.isNotBlank(street))
-        {
+        if (StringUtils.isNotBlank(street)) {
             criteria.andStreetLike("%" + street + "%");
         }
+        criteria.andEnableEqualTo(Boolean.FALSE);
         orgCompanyExample.setOrderByClause("createTime desc" + " limit " + startPos + "," + pageSize);
 
         return orgCompanyMapper.selectByExample(orgCompanyExample);
     }
 
     @Override
-    public int countOrgCompany(Map<String, Object> paramsMap)
-    {
+    public int countOrgCompany(Map<String, Object> paramsMap) {
         String companyName = (String) paramsMap.get("companyName");
         String street = (String) paramsMap.get("street");
 
         OrgCompanyExample orgCompanyExample = new OrgCompanyExample();
         OrgCompanyExample.Criteria criteria = orgCompanyExample.createCriteria();
-        if (StringUtils.isNotBlank(companyName))
-        {
+        if (StringUtils.isNotBlank(companyName)) {
             criteria.andCompanyNameLike("%" + companyName + "%");
         }
-        if (StringUtils.isNotBlank(street))
-        {
+        if (StringUtils.isNotBlank(street)) {
             criteria.andStreetLike("%" + street + "%");
         }
+        criteria.andEnableEqualTo(Boolean.FALSE);
         return orgCompanyMapper.countByExample(orgCompanyExample);
     }
 
     @Override
-    public OrgCompany selectById(Integer id)
-    {
+    public OrgCompany selectById(Integer id) {
         return orgCompanyMapper.selectByPrimaryKey(id);
     }
 
     @Override
-    public boolean deleteOrgCompany(String ids)
-    {
+    public boolean deleteOrgCompany(String ids) {
         String[] idArr = ids.split(",");
-        for (String id : idArr)
-        {
+        for (String id : idArr) {
             OrgCompany orgCompany = orgCompanyMapper.selectByPrimaryKey(Integer.valueOf(id));
-            orgCompany.setState(9);
+            orgCompany.setEnable(Boolean.TRUE);
             orgCompanyMapper.updateByPrimaryKey(orgCompany);
         }
         return true;

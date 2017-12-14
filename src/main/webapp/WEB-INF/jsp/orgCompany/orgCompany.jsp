@@ -90,7 +90,7 @@
     }
 
     function deleteNews(value) {
-        layer.confirm('确定删除？', {
+        layer.confirm('确定删除该企业账号？', {
             btn: ['确定', '取消'] //按钮
         }, function () {
             $.ajax({

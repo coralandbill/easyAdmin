@@ -92,6 +92,7 @@ public class OrgCompanyController {
             orgCompany.setState(0);
             orgCompany.setCreateTime(new Date());
             orgCompany.setCreator(adminUser.getId());
+            orgCompany.setEnable(Boolean.FALSE);
             jsonObject.put("success", orgCompanyService.updateOrgCompany(orgCompany));
         } else
         {

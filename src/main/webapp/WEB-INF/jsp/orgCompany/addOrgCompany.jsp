@@ -49,6 +49,7 @@
                                 <input type="text" maxlength="20" id="logonId" name="logonId"
                                        value="${orgCompany.logonId}"
                                        <c:if test="${not empty orgCompanyId}">readonly</c:if> class="form-control">
+                                <span class="help-block m-b-none">请使用字母+数字方式创建账号</span>
                             </div>
                             <c:if test="${empty orgCompanyId}">
                                 <div class="col-sm-2">
