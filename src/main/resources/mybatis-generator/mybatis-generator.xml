@@ -30,7 +30,7 @@
             <!--<property name="enableSubPackages" value="true" />-->
         </javaClientGenerator>
 
-        <table schema="lhadmin" tableName="org_company_proxies" domainObjectName="OrgCompanyProxies" >
+        <table schema="lhadmin" tableName="org_company" domainObjectName="OrgCompany" >
             <property name="useActualColumnNames" value="true"/>
             <generatedKey column="id" sqlStatement="MySql" identity="true" />
             <!--<columnOverride column="DATE_FIELD" property="startDate" />-->
