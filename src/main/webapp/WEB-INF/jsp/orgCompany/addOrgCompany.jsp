@@ -133,6 +133,10 @@
 <script src="/scripts/plugins/layer/layer.min.js"></script>
 <script>
 
+    <c:if test="${not empty orgCompany}">
+        $("#street").val("${orgCompany.street}");
+    </c:if>
+
     function getLogonId() {
         var date = new Date();
         var logonId = date.getFullYear().toString() + (date.getMonth() + 1).toString() + date.getDate().toString() +

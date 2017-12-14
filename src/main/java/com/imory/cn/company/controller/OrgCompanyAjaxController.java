@@ -49,7 +49,7 @@ public class OrgCompanyAjaxController {
         if (search == null) search = "";
 
         Map<String, Object> paramsMap = new HashMap<>();
-        paramsMap.put("search", search);
+        paramsMap.put("companyName", search);
         paramsMap.put("startPos", offset);
         paramsMap.put("pageSize", limit);
 

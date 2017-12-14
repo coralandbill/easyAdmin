@@ -45,9 +45,7 @@
                                     <th data-field="id">ID</th>
                                     <th data-field="logonId">登录账号</th>
                                     <th data-field="companyName">公司名称</th>
-                                    <th data-field="state">状态</th>
-                                    <th data-field="province">省份</th>
-                                    <th data-field="city">城市</th>
+                                    <th data-field="state" data-formatter="ztFun">状态</th>
                                     <th data-field="street">街道</th>
                                     <th data-field="code">组织代码</th>
                                     <th data-field="createTimeStr">创建日期</th>
@@ -74,6 +72,17 @@
     function czFun(value) {
         return '<button type="button" onclick="editNews(' + value + ');" class="btn btn-outline btn-primary edit">编辑</button>' +
             '<button type="button" onclick="deleteNews(' + value + ');" style="margin-left: 10px;" class="btn btn-outline btn-danger delete">删除</button>';
+    }
+
+    function ztFun(value) {
+        if (value == 0) {
+            return "正常";
+        }
+        else if (value == 9) {
+            return "锁定";
+        } else {
+            return "异常";
+        }
     }
 
     function editNews(value) {
