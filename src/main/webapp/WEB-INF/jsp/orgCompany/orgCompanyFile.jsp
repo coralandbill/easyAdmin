@@ -6,7 +6,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>企业用户管理</title>
+    <title>企业文件管理</title>
     <meta name="keywords" content="H+后台主题,后台bootstrap框架,会员中心主题,后台HTML,响应式后台">
     <meta name="description" content="H+是一个完全响应式，基于Bootstrap3最新版本开发的扁平化主题，她采用了主流的左右两栏式布局，使用了Html5+CSS3等现代技术">
     <link rel="shortcut icon" href="favicon.ico">
@@ -26,7 +26,7 @@
                 <div class="col-sm-12">
                     <!-- Example Events -->
                     <div class="example-wrap">
-                        <h4 class="example-title">企业用户管理</h4>
+                        <h4 class="example-title">企业文件管理</h4>
                         <div class="example">
                             <div class="btn-group hidden-xs" id="exampleTableEventsToolbar" role="group">
                                 <button type="button"
@@ -43,12 +43,9 @@
                                 <tr>
                                     <%--<th data-field="state" data-checkbox="true"></th>--%>
                                     <th data-field="id">ID</th>
-                                    <th data-field="logonId">登录账号</th>
                                     <th data-field="companyName">公司名称</th>
-                                    <th data-field="state" data-formatter="ztFun">状态</th>
                                     <th data-field="street">街道</th>
                                     <th data-field="code">组织代码</th>
-                                    <th data-field="createTimeStr">创建日期</th>
                                     <th data-field="id" data-formatter="czFun" data-events="actionEvents">操作</th>
                                 </tr>
                                 </thead>
@@ -70,67 +67,15 @@
 <script>
 
     function czFun(value) {
-        return '<button type="button" onclick="editNews(' + value + ');" class="btn btn-outline btn-primary edit">编辑</button>' +
-                '<button type="button" onclick="editFile(' + value + ');" style="margin-left: 10px;" class="btn btn-outline btn-primary edit">管理文件</button>' +
-                '<button type="button" onclick="deleteNews(' + value + ');" style="margin-left: 10px;" class="btn btn-outline btn-danger delete">删除</button>';
+        return '<button type="button" onclick="editFile(' + value + ');" class="btn btn-outline btn-primary edit">管理文件</button>';
     }
 
-    function ztFun(value) {
-        if (value == 0) {
-            return "正常";
-        }
-        else if (value == 9) {
-            return "锁定";
-        } else {
-            return "异常";
-        }
-    }
-
-    function editFile(value) {
-        window.location.href= "/admin/excelFile/index.do?companyId=" + value;
-    }
-
-    function editNews(value) {
-        window.location.href = "/admin/orgCompany/editOrgCompany.do?orgCompanyId=" + value;
-    }
-
-    function deleteNews(value) {
-        layer.confirm('确定删除该企业账号？', {
-            btn: ['确定', '取消'] //按钮
-        }, function () {
-            $.ajax({
-                url: "/admin/orgCompanyAjax/deleteOrgCompany.do",
-                contentType: "application/x-www-form-urlencoded; charset=utf-8",
-                dataType: "json",
-                type: "POST",
-                data: {
-                    ids: value
-                },
-                success: function (data) {
-                    if (data.success) {
-                        layer.msg('操作成功', {
-                            time: 1000 //2秒关闭（如果不配置，默认是3秒）
-                        }, function () {
-                            $('#exampleTableEvents').bootstrapTable(
-                                "refresh",
-                                {
-                                    url: "/admin/orgCompanyAjax/listOrgCompany.do",
-                                }
-                            );
-                        });
-                    }
-                    else {
-                        layer.msg("操作失败");
-                    }
-                }
-            });
-        }, function () {
-
-        });
+    function editFile(id) {
+        window.location.href= "/admin/excelFile/index.do?companyId=" + id;
     }
 
     $("#exampleTableEvents").bootstrapTable({
-        url: "/admin/orgCompanyAjax/listOrgCompany.do",
+        url: "/admin/orgCompanyAjax/listOrgCompanyFile.do",
         dataType: "json",
         search: !0,
         pagination: !0,

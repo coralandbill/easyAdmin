@@ -38,6 +38,13 @@ public class OrgCompanyController {
         return "orgCompany/orgCompany";
     }
 
+    @RequestMapping("/file")
+    @SessionCheck
+    public String file()
+    {
+        return "orgCompany/orgCompanyFile";
+    }
+
     @RequestMapping(value = "/saveOrgCompany", method = RequestMethod.POST)
     public String saveOrgCompany(String companyName, String logonId, String logonPsd,
                                  String province, String city, String code, String street,

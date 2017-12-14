@@ -49,7 +49,7 @@ public class OrgCompanyServiceImpl implements OrgCompanyService {
             criteria.andCompanyNameLike("%" + companyName + "%");
         }
         if (StringUtils.isNotBlank(street)) {
-            criteria.andStreetLike("%" + street + "%");
+            criteria.andStreetEqualTo(street);
         }
         criteria.andEnableEqualTo(Boolean.FALSE);
         orgCompanyExample.setOrderByClause("createTime desc" + " limit " + startPos + "," + pageSize);
@@ -68,7 +68,7 @@ public class OrgCompanyServiceImpl implements OrgCompanyService {
             criteria.andCompanyNameLike("%" + companyName + "%");
         }
         if (StringUtils.isNotBlank(street)) {
-            criteria.andStreetLike("%" + street + "%");
+            criteria.andStreetEqualTo(street);
         }
         criteria.andEnableEqualTo(Boolean.FALSE);
         return orgCompanyMapper.countByExample(orgCompanyExample);

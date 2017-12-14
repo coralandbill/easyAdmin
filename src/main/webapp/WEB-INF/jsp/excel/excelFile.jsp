@@ -1,12 +1,13 @@
 <!DOCTYPE html>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <!DOCTYPE html>
 <html>
 <!-- Mirrored from www.zi-han.net/theme/hplus/table_bootstrap.html by HTTrack Website Copier/3.x [XR&CO'2014], Wed, 20 Jan 2016 14:20:03 GMT -->
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>企业用户管理</title>
+    <title>企业文件中心</title>
     <meta name="keywords" content="H+后台主题,后台bootstrap框架,会员中心主题,后台HTML,响应式后台">
     <meta name="description" content="H+是一个完全响应式，基于Bootstrap3最新版本开发的扁平化主题，她采用了主流的左右两栏式布局，使用了Html5+CSS3等现代技术">
     <link rel="shortcut icon" href="favicon.ico">
@@ -15,6 +16,8 @@
     <link href="/css/bootstrap-table/bootstrap-table.min.css" rel="stylesheet">
     <link href="/css/animate.min.css" rel="stylesheet">
     <link href="/css/style.min862f.css?v=4.1.0" rel="stylesheet">
+    <link href="/css/iconfont.css" rel="stylesheet">
+    <link href="/css/bootstrap-datetimepicker.min.css" rel="stylesheet">
 </head>
 
 <body class="gray-bg">
@@ -26,14 +29,12 @@
                 <div class="col-sm-12">
                     <!-- Example Events -->
                     <div class="example-wrap">
-                        <h4 class="example-title">企业用户管理</h4>
+                        <h4 class="example-title" style="color: red;">《${orgCompany.companyName}》文件管理</h4>
                         <div class="example">
                             <div class="btn-group hidden-xs" id="exampleTableEventsToolbar" role="group">
-                                <button type="button"
-                                        onclick="javascript:location.href='/admin/orgCompany/editOrgCompany.do';"
-                                        class="btn btn-outline btn-default">
-                                    <i class="glyphicon glyphicon-plus" aria-hidden="true">添加</i>
-                                </button>
+                                <c:if test="${hasUploadFlag}">
+                                    <span>上传<svg class="icon" onclick="doUpload();" aria-hidden="true"><use xlink:href="#icon-shangchuan3"></use></svg></span>
+                                </c:if>
                                 <%--<button type="button" class="btn btn-outline btn-default">
                                     <i class="glyphicon glyphicon-trash" aria-hidden="true">删除</i>
                                 </button>--%>
@@ -43,12 +44,9 @@
                                 <tr>
                                     <%--<th data-field="state" data-checkbox="true"></th>--%>
                                     <th data-field="id">ID</th>
-                                    <th data-field="logonId">登录账号</th>
                                     <th data-field="companyName">公司名称</th>
-                                    <th data-field="state" data-formatter="ztFun">状态</th>
                                     <th data-field="street">街道</th>
                                     <th data-field="code">组织代码</th>
-                                    <th data-field="createTimeStr">创建日期</th>
                                     <th data-field="id" data-formatter="czFun" data-events="actionEvents">操作</th>
                                 </tr>
                                 </thead>
@@ -62,75 +60,72 @@
     </div>
     <!-- End Panel Other -->
 </div>
+<div class="modal fade" id="exampleModal" style="z-index: 999" tabindex="-1" role="dialog"
+     aria-labelledby="exampleModalLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span>
+                </button>
+                <h4 class="modal-title" id="exampleModalLabel">添加角色</h4>
+            </div>
+            <div class="modal-body">
+                <form id="commentForm" class="form-horizontal" enctype="multipart/form-data">
+                    <input type="hidden" id="roleId"/>
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">日期</label>
+                        <div class="col-sm-9 input-group date">
+                            <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
+                            <input type="text" class="form-control" id="fileDate" name="fileDate" value="">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">Excel</label>
+                        <div class="col-sm-9 input-group date">
+                            <input type="file" class="form-control" id="excelFile" name="excelFile" accept=".xls,.xlsx">
+                            <span class="help-block m-b-none">请勿重复上传同一个Excel</span>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+                <button type="button" class="btn btn-primary" onclick="$('#commentForm').submit();">确定</button>
+            </div>
+        </div>
+    </div>
+</div>
 <script src="/scripts/jquery.min.js?v=2.1.4"></script>
 <script src="/scripts/bootstrap.min.js?v=3.3.6"></script>
 <script src="/scripts/plugins/bootstrap-table/bootstrap-table.min.js"></script>
 <script src="/scripts/plugins/bootstrap-table/locale/bootstrap-table-zh-CN.min.js"></script>
 <script src="/scripts/plugins/layer/layer.min.js"></script>
+<script src="/scripts/iconfont.js"></script>
+<script src="/scripts/bootstrap-prettyfile.js"></script>
+<script src="/scripts/bootstrap-datetimepicker.min.js"></script>
 <script>
 
-    function czFun(value) {
-        return '<button type="button" onclick="editNews(' + value + ');" class="btn btn-outline btn-primary edit">编辑</button>' +
-                '<button type="button" onclick="editFile(' + value + ');" style="margin-left: 10px;" class="btn btn-outline btn-primary edit">管理文件</button>' +
-                '<button type="button" onclick="deleteNews(' + value + ');" style="margin-left: 10px;" class="btn btn-outline btn-danger delete">删除</button>';
-    }
-
-    function ztFun(value) {
-        if (value == 0) {
-            return "正常";
-        }
-        else if (value == 9) {
-            return "锁定";
-        } else {
-            return "异常";
-        }
-    }
-
-    function editFile(value) {
-        window.location.href= "/admin/excelFile/index.do?companyId=" + value;
-    }
-
-    function editNews(value) {
-        window.location.href = "/admin/orgCompany/editOrgCompany.do?orgCompanyId=" + value;
-    }
-
-    function deleteNews(value) {
-        layer.confirm('确定删除该企业账号？', {
-            btn: ['确定', '取消'] //按钮
-        }, function () {
-            $.ajax({
-                url: "/admin/orgCompanyAjax/deleteOrgCompany.do",
-                contentType: "application/x-www-form-urlencoded; charset=utf-8",
-                dataType: "json",
-                type: "POST",
-                data: {
-                    ids: value
-                },
-                success: function (data) {
-                    if (data.success) {
-                        layer.msg('操作成功', {
-                            time: 1000 //2秒关闭（如果不配置，默认是3秒）
-                        }, function () {
-                            $('#exampleTableEvents').bootstrapTable(
-                                "refresh",
-                                {
-                                    url: "/admin/orgCompanyAjax/listOrgCompany.do",
-                                }
-                            );
-                        });
-                    }
-                    else {
-                        layer.msg("操作失败");
-                    }
-                }
-            });
-        }, function () {
-
+    $(document).ready(function () {
+        $('input[type="file"][name="excelFile"]').prettyFile({
+            text: "选择Excel"
         });
+    });
+
+    function czFun(value) {
+        var _html = '';
+        <c:if test="${hasUpdateFlag}">
+            _html += '<button type="button" onclick="editRole(' + value + ');" class="btn btn-outline btn-primary edit">更新数据</button>';
+        </c:if>
+        _html += '<svg class="icon" onclick="doUpload();" aria-hidden="true"><use xlink:href="#icon-xiazai"></use></svg>';
+        return _html;
+    }
+
+    function doUpload() {
+        $("#exampleModal").modal("show");
     }
 
     $("#exampleTableEvents").bootstrapTable({
-        url: "/admin/orgCompanyAjax/listOrgCompany.do",
+        url: "/admin/orgCompanyAjax/listOrgCompanyFile.do",
         dataType: "json",
         search: !0,
         pagination: !0,
