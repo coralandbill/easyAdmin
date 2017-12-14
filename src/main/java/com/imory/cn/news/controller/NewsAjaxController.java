@@ -39,7 +39,7 @@ public class NewsAjaxController {
     @Value("#{runtimeProperties['img.uploadfiledir_by']}")
     private String imgDir_BY;
 
-    @Value("#{runtimeProperties['img.url']}")
+    @Value("#{runtimeProperties['web.url']}")
     private String imgUrl;
 
     @Autowired
