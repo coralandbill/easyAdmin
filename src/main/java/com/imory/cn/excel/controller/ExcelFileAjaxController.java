@@ -1,8 +1,8 @@
 package com.imory.cn.excel.controller;
 
+import com.imory.cn.admin.dto.AdminUser;
 import com.imory.cn.excel.dto.ExcelFile;
 import com.imory.cn.excel.service.ExcelFileService;
-import com.imory.cn.utils.ExcelUtils;
 import com.imory.cn.utils.GetTotalPageNumUtil;
 import org.apache.commons.io.FileUtils;
 import org.joda.time.DateTime;
@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.http.HttpSession;
 import java.io.File;
 import java.io.IOException;
 import java.util.*;
@@ -78,8 +79,10 @@ public class ExcelFileAjaxController {
     }
 
     @RequestMapping("/saveExcelFile")
-    public String saveExcelFile(@RequestParam MultipartFile excelFile, String fileDate)
+    public String saveExcelFile(@RequestParam MultipartFile excelFile, String fileDate, Integer companyId, HttpSession session)
     {
+        AdminUser adminUser = (AdminUser) session.getAttribute(AdminUser.SESSION_ID);
+
         JSONObject jsonObject = new JSONObject();
 
         String fileName = excelFile.getOriginalFilename();
@@ -110,10 +113,25 @@ public class ExcelFileAjaxController {
             //copy文件到编译目录
             FileUtils.copyFile(new File(uploadDir + fileName), new File(uploadDir_BY + excelName));
 
-            //开始解析文件
-            ExcelUtils.analysisXls(uploadDir + excelName);
-
-            jsonObject.put("success", true);
+            //保存解析记录
+            Map<String, Object> paramsMap = new HashMap<>();
+            paramsMap.put("companyId", companyId);
+            paramsMap.put("fileName", fileName);
+            paramsMap.put("fileName_bk", excelName);
+            paramsMap.put("fileDate", fileDate);
+            paramsMap.put("fileUrl", webUrl + "/excel/" + fileName);
+            paramsMap.put("fileUrlBak", webUrl + "/excel/" + excelName);
+            paramsMap.put("filePath", uploadDir);
+            paramsMap.put("creator", adminUser.getId());
+            if (excelFileService.saveExcelFile(paramsMap))
+            {
+                //开始解析文件
+                jsonObject.put("success", excelFileService.analysisXls(uploadDir + excelName, companyId, fileDate, adminUser.getId()));
+            } else
+            {
+                //开始解析文件
+                jsonObject.put("success", false);
+            }
             jsonObject.put("webUrl", webUrl + "/excel/" + excelName);
             jsonObject.put("file_path", webUrl + "/excel/" + excelName);
         } catch (IOException e)

@@ -126,7 +126,8 @@ public class ExcelUtils {
 
                 //职工人数
                 cell = row.getCell(5);
-                detailMap.put("employee", getCellValue(cell));
+                String employee = getCellValue(cell);
+                detailMap.put("employee", employee.substring(0, employee.lastIndexOf(".")));
 
                 //存在问题
                 row = sheet.getRow(rowNums - 3);
@@ -144,8 +145,6 @@ public class ExcelUtils {
                 detailMap.put("conclusion", getCellValue(cell));
 
                 //危废列表
-
-                System.out.println(detailMap);
                 List<Map<String, Object>> wfList = new ArrayList<>();
                 for (int i = 0; i < rowNums - 13; i++)
                 {
@@ -171,10 +170,12 @@ public class ExcelUtils {
                     cell = row.getCell(5);
                     map.put("direction", getCellValue(cell));
 
+                    map.put("orderNum", i + 1);
+
                     wfList.add(map);
                 }
-
                 detailMap.put("wfList", wfList);
+                System.out.println(detailMap);
             }
 
         } catch (Exception e)

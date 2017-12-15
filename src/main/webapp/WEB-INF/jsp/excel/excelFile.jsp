@@ -142,7 +142,8 @@
                     method: 'post',
                     dataType: 'json',
                     data: {
-                        'fileDate': $("#fileDate").val()
+                        'fileDate': $("#fileDate").val(),
+                        companyId:${companyId}
                     },
                     success: function (data) {
                         if (data.success) {
