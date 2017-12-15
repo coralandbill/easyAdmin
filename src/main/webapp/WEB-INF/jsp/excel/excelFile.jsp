@@ -59,10 +59,10 @@
                                     <%--<th data-field="state" data-checkbox="true"></th>--%>
                                     <th data-field="id">ID</th>
                                     <th data-field="fileName">文件名称</th>
-                                    <th data-field="fileDate">文件日期</th>
-                                    <th data-field="state">是否已处理</th>
-                                    <th data-field="createTime">上传日期</th>
-                                    <th data-field="updateTime">更新日期</th>
+                                    <th data-field="fileDateStr">文件日期</th>
+                                    <th data-field="state" data-formatter="ztFun">是否已处理</th>
+                                    <th data-field="createTimeStr">上传日期</th>
+                                    <th data-field="updateTimeStr">更新日期</th>
                                     <th data-field="id" data-formatter="czFun" data-events="actionEvents">操作</th>
                                 </tr>
                                 </thead>
@@ -196,6 +196,17 @@
             text: "选择Excel"
         });
     });
+
+    function ztFun(value) {
+        if(value == 0)
+        {
+            return "未处理";
+        }
+        else
+        {
+            return "已处理";
+        }
+    }
 
     function czFun(value) {
         var _html = '';

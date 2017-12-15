@@ -66,6 +66,11 @@ public class ExcelFileAjaxController {
             fileBeanMap.setBean(excelFile);
             Map branchInstMap = new HashMap<>();
             branchInstMap.put("createTimeStr", new DateTime(excelFile.getCreateTime()).toString("yyyy-MM-dd HH:mm"));
+            if (excelFile.getUpdateTime() != null)
+            {
+                branchInstMap.put("updateTimeStr", new DateTime(excelFile.getUpdateTime()).toString("yyyy-MM-dd HH:mm"));
+            }
+            branchInstMap.put("fileDateStr", new DateTime(excelFile.getFileDate()).toString("yyyy-MM-dd"));
             branchInstMap.putAll(fileBeanMap);
             resultList.add(branchInstMap);
         }
