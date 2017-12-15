@@ -33,20 +33,36 @@
                         <div class="example">
                             <div class="btn-group hidden-xs" id="exampleTableEventsToolbar" role="group">
                                 <c:if test="${hasUploadFlag}">
-                                    <span>上传<svg class="icon" onclick="doUpload();" aria-hidden="true"><use xlink:href="#icon-shangchuan3"></use></svg></span>
+                                    <span><a href="javascript:doUpload();">上传<svg class="icon" aria-hidden="true"><use
+                                            xlink:href="#icon-shangchuan3"></use></svg></span></a>
                                 </c:if>
-                                <%--<button type="button" class="btn btn-outline btn-default">
-                                    <i class="glyphicon glyphicon-trash" aria-hidden="true">删除</i>
-                                </button>--%>
+                                <small>
+                                    <c:choose>
+                                        <c:when test="${flag == 1}">
+                                            <button type="button" style="margin-left: 20px;"
+                                                    onclick="javascript:location.href='/admin/orgCompany/index.do';"
+                                                    class="btn btn-outline btn-success btn-xs">返回上一步
+                                            </button>
+                                        </c:when>
+                                        <c:otherwise>
+                                            <button type="button" style="margin-left: 20px;"
+                                                    onclick="javascript:location.href='/admin/orgCompany/file.do';"
+                                                    class="btn btn-outline btn-success btn-xs">返回上一步
+                                            </button>
+                                        </c:otherwise>
+                                    </c:choose>
+                                </small>
                             </div>
                             <table id="exampleTableEvents" data-mobile-responsive="true">
                                 <thead>
                                 <tr>
                                     <%--<th data-field="state" data-checkbox="true"></th>--%>
                                     <th data-field="id">ID</th>
-                                    <th data-field="companyName">公司名称</th>
-                                    <th data-field="street">街道</th>
-                                    <th data-field="code">组织代码</th>
+                                    <th data-field="fileName">文件名称</th>
+                                    <th data-field="fileDate">文件日期</th>
+                                    <th data-field="state">是否已处理</th>
+                                    <th data-field="createTime">上传日期</th>
+                                    <th data-field="updateTime">更新日期</th>
                                     <th data-field="id" data-formatter="czFun" data-events="actionEvents">操作</th>
                                 </tr>
                                 </thead>
@@ -114,9 +130,9 @@
     function czFun(value) {
         var _html = '';
         <c:if test="${hasUpdateFlag}">
-            _html += '<button type="button" onclick="editRole(' + value + ');" class="btn btn-outline btn-primary edit">更新数据</button>';
+        _html += '<button type="button" onclick="editRole(' + value + ');" class="btn btn-outline btn-primary edit">更新数据</button>';
         </c:if>
-        _html += '<svg class="icon" onclick="doUpload();" aria-hidden="true"><use xlink:href="#icon-xiazai"></use></svg>';
+        _html += '<svg style="margin-left: 10px;" class="icon" onclick="doUpload();" aria-hidden="true"><use xlink:href="#icon-xiazai"></use></svg>';
         return _html;
     }
 
@@ -125,7 +141,7 @@
     }
 
     $("#exampleTableEvents").bootstrapTable({
-        url: "/admin/orgCompanyAjax/listOrgCompanyFile.do",
+        url: "/admin/excelFileAjax/listCompanyFile.do?companyId=${companyId}",
         dataType: "json",
         search: !0,
         pagination: !0,

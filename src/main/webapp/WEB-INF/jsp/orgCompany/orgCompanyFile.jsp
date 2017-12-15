@@ -71,7 +71,7 @@
     }
 
     function editFile(id) {
-        window.location.href= "/admin/excelFile/index.do?companyId=" + id;
+        window.location.href= "/admin/excelFile/index.do?companyId=" + id + "&flag=2";
     }
 
     $("#exampleTableEvents").bootstrapTable({

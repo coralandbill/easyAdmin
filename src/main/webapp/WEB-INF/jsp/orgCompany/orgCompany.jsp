@@ -87,7 +87,7 @@
     }
 
     function editFile(value) {
-        window.location.href= "/admin/excelFile/index.do?companyId=" + value;
+        window.location.href= "/admin/excelFile/index.do?companyId=" + value + "&flag=1";
     }
 
     function editNews(value) {

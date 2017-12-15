@@ -21,18 +21,24 @@ public class ExcelFileController {
 
     @RequestMapping("/index")
     @SessionCheck
-    public String index(@RequestParam("companyId") Integer companyId, HttpSession session, Model model) {
+    public String index(@RequestParam("companyId") Integer companyId, Integer flag, HttpSession session, Model model)
+    {
         List<String> authUrlList = (List<String>) session.getAttribute(AdminUser.SESSION_AUTH_ID);
         boolean hasUploadFlag = false;
         boolean hasUpdateFlag = false;
-        for (String url : authUrlList) {
-            if ("/admin/company/uploadFile.do".equalsIgnoreCase(url)) {
+        for (String url : authUrlList)
+        {
+            if ("/admin/company/uploadFile.do".equalsIgnoreCase(url))
+            {
                 hasUploadFlag = true;
             }
-            if ("/admin/company/updateFile.do".equalsIgnoreCase(url)) {
+            if ("/admin/company/updateFile.do".equalsIgnoreCase(url))
+            {
                 hasUpdateFlag = true;
             }
         }
+        model.addAttribute("companyId", companyId);
+        model.addAttribute("flag", flag);
         model.addAttribute("hasUploadFlag", hasUploadFlag);
         model.addAttribute("hasUpdateFlag", hasUpdateFlag);
         model.addAttribute("orgCompany", orgCompanyService.selectById(companyId));
