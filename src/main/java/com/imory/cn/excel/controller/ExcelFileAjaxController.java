@@ -2,18 +2,22 @@ package com.imory.cn.excel.controller;
 
 import com.imory.cn.excel.dto.ExcelFile;
 import com.imory.cn.excel.service.ExcelFileService;
+import com.imory.cn.utils.ExcelUtils;
 import com.imory.cn.utils.GetTotalPageNumUtil;
+import org.apache.commons.io.FileUtils;
 import org.joda.time.DateTime;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cglib.beans.BeanMap;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.io.File;
+import java.io.IOException;
+import java.util.*;
 
 /**
  * <p>名称</p>
@@ -27,6 +31,15 @@ import java.util.Map;
 @RequestMapping("admin/excelFileAjax")
 @RestController
 public class ExcelFileAjaxController {
+
+    @Value("#{runtimeProperties['excel.uploadfiledir']}")
+    private String excelDir;
+
+    @Value("#{runtimeProperties['excel.uploadfiledir_by']}")
+    private String excelDir_BY;
+
+    @Value("#{runtimeProperties['web.url']}")
+    private String webUrl;
 
     @Autowired
     private ExcelFileService excelFileService;
@@ -61,6 +74,53 @@ public class ExcelFileAjaxController {
         jsonObject.put("total", roleCnt);
         jsonObject.put("page", GetTotalPageNumUtil.getTotalPage(roleCnt, limit));
 
+        return jsonObject.toString();
+    }
+
+    @RequestMapping("/saveExcelFile")
+    public String saveExcelFile(@RequestParam MultipartFile excelFile, String fileDate)
+    {
+        JSONObject jsonObject = new JSONObject();
+
+        String fileName = excelFile.getOriginalFilename();
+        String suffix = fileName.substring(fileName.lastIndexOf("."));
+
+        String excelName = new Date().getTime() + suffix;
+        if (!excelDir.endsWith(File.separator))
+        {
+            excelDir = excelDir + File.separator;
+        }
+        if (!excelDir_BY.endsWith(File.separator))
+        {
+            excelDir_BY = excelDir_BY + File.separator;
+        }
+        String uploadDir = excelDir + "excel" + File.separator;
+        String uploadDir_BY = excelDir_BY + "excel" + File.separator;
+        File newFile = new File(uploadDir);
+        if (!newFile.exists())
+        {
+            newFile.mkdirs();
+        }
+        try
+        {
+            //上传到本地
+            FileUtils.copyInputStreamToFile(excelFile.getInputStream(), new File(uploadDir, fileName));
+            //copy备份文件
+            FileUtils.copyFile(new File(uploadDir + fileName), new File(uploadDir + excelName));
+            //copy文件到编译目录
+            FileUtils.copyFile(new File(uploadDir + fileName), new File(uploadDir_BY + excelName));
+
+            //开始解析文件
+            ExcelUtils.analysisXls(uploadDir + excelName);
+
+            jsonObject.put("success", true);
+            jsonObject.put("webUrl", webUrl + "/excel/" + excelName);
+            jsonObject.put("file_path", webUrl + "/excel/" + excelName);
+        } catch (IOException e)
+        {
+            e.printStackTrace();
+            jsonObject.put("success", false);
+        }
         return jsonObject.toString();
     }
 }

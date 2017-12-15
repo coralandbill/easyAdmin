@@ -113,15 +113,84 @@
 </div>
 <script src="/scripts/jquery.min.js?v=2.1.4"></script>
 <script src="/scripts/bootstrap.min.js?v=3.3.6"></script>
+<script src="/scripts/plugins/jquery-validate/jquery.validate.min.js"></script>
+<script src="/scripts/plugins/jquery-validate/messages_zh.min.js"></script>
 <script src="/scripts/plugins/bootstrap-table/bootstrap-table.min.js"></script>
 <script src="/scripts/plugins/bootstrap-table/locale/bootstrap-table-zh-CN.min.js"></script>
 <script src="/scripts/plugins/layer/layer.min.js"></script>
 <script src="/scripts/iconfont.js"></script>
 <script src="/scripts/bootstrap-prettyfile.js"></script>
 <script src="/scripts/bootstrap-datetimepicker.min.js"></script>
+<script src="/scripts/ajaxfileupload.js"></script>
 <script>
 
+    $("#commentForm").validate({
+        rules: {
+            fileDate: "required"
+        },
+        messages: {
+            fileDate: "请选择文件日期",
+        },
+        submitHandler: function () {
+            if ($("#excelFile").val().length == 0) {
+                layer.msg("请选择需要上传的文件", {time: 1000});
+                return;
+            }
+            $.ajaxFileUpload({
+                    url: '/admin/excelFileAjax/saveExcelFile.do',
+                    fileElementId: "excelFile",
+                    method: 'post',
+                    dataType: 'json',
+                    data: {
+                        'fileDate': $("#fileDate").val()
+                    },
+                    success: function (data) {
+                        if (data.success) {
+                            layer.msg('操作成功', {
+                                time: 1000 //2秒关闭（如果不配置，默认是3秒）
+                            }, function () {
+                                location.reload();
+                                /*$("#exampleModal").modal('hide');
+                                $('#exampleTableEvents').bootstrapTable(
+                                    "refresh",
+                                    {
+                                        url: "/admin/excelFileAjax/listCompanyFile.do?companyId=${companyId}",
+                                    }
+                                );*/
+                            });
+                        }
+                        else {
+                            layer.msg("操作失败");
+                        }
+                    },
+                    error: function (data, status) {
+                        alert("error");
+                    }
+                }
+            );
+        }
+    });
+
     $(document).ready(function () {
+        $.fn.datetimepicker.dates['zh-CN'] = {
+            days: ["星期日", "星期一", "星期二", "星期三", "星期四", "星期五", "星期六", "星期日"],
+            daysShort: ["周日", "周一", "周二", "周三", "周四", "周五", "周六", "周日"],
+            daysMin: ["日", "一", "二", "三", "四", "五", "六", "日"],
+            months: ["一月", "二月", "三月", "四月", "五月", "六月", "七月", "八月", "九月", "十月", "十一月", "十二月"],
+            monthsShort: ["一月", "二月", "三月", "四月", "五月", "六月", "七月", "八月", "九月", "十月", "十一月", "十二月"],
+            today: "今天",
+            suffix: [],
+            meridiem: ["上午", "下午"]
+        };
+        $('#fileDate').datetimepicker(
+            {
+                startDate: new Date(),
+                minView: "month",
+                autoclose: true,
+                format: "yyyy-mm-dd",
+                language: 'zh-CN'
+            }
+        );
         $('input[type="file"][name="excelFile"]').prettyFile({
             text: "选择Excel"
         });

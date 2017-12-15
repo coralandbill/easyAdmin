@@ -11,13 +11,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cglib.beans.BeanMap;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpSession;
-import java.io.File;
-import java.io.IOException;
 import java.util.*;
 
 /**
@@ -33,20 +29,12 @@ import java.util.*;
 @RestController
 public class OrgCompanyAjaxController {
 
-    @Value("#{runtimeProperties['excel.uploadfiledir']}")
-    private String excelDir;
-
-    @Value("#{runtimeProperties['img.uploadfiledir_by']}")
-    private String excelDir_BY;
-
-    @Value("#{runtimeProperties['web.url']}")
-    private String imgUrl;
-
     @Autowired
     private OrgCompanyService orgCompanyService;
 
     @RequestMapping("/listOrgCompany")
-    public String listOrgCompany(String search, Integer limit, Integer offset) {
+    public String listOrgCompany(String search, Integer limit, Integer offset)
+    {
         if (search == null) search = "";
 
         Map<String, Object> paramsMap = new HashMap<>();
@@ -59,7 +47,8 @@ public class OrgCompanyAjaxController {
         List<Map> resultList = new ArrayList<>();
         List<OrgCompany> orgCompanyList = orgCompanyService.listOrgCompany(paramsMap);
         BeanMap roleBeanMap = BeanMap.create(new OrgCompany());
-        for (OrgCompany orgCompany : orgCompanyList) {
+        for (OrgCompany orgCompany : orgCompanyList)
+        {
             roleBeanMap.setBean(orgCompany);
             Map branchInstMap = new HashMap<>();
             branchInstMap.put("createTimeStr", new DateTime(orgCompany.getCreateTime()).toString("yyyy-MM-dd HH:mm"));
@@ -76,7 +65,8 @@ public class OrgCompanyAjaxController {
     }
 
     @RequestMapping("/listOrgCompanyFile")
-    public String listOrgCompanyFile(String search, Integer limit, Integer offset, HttpSession session) {
+    public String listOrgCompanyFile(String search, Integer limit, Integer offset, HttpSession session)
+    {
         AdminUser adminUser = (AdminUser) session.getAttribute(AdminUser.SESSION_ID);
         if (search == null) search = "";
 
@@ -84,7 +74,8 @@ public class OrgCompanyAjaxController {
         paramsMap.put("companyName", search);
         paramsMap.put("startPos", offset);
         paramsMap.put("pageSize", limit);
-        if (adminUser.getId() != -1) {
+        if (adminUser.getId() != -1)
+        {
             paramsMap.put("street", adminUser.getStreet());
         }
 
@@ -93,7 +84,8 @@ public class OrgCompanyAjaxController {
         List<Map> resultList = new ArrayList<>();
         List<OrgCompany> orgCompanyList = orgCompanyService.listOrgCompany(paramsMap);
         BeanMap roleBeanMap = BeanMap.create(new OrgCompany());
-        for (OrgCompany orgCompany : orgCompanyList) {
+        for (OrgCompany orgCompany : orgCompanyList)
+        {
             roleBeanMap.setBean(orgCompany);
             Map branchInstMap = new HashMap<>();
             branchInstMap.put("createTimeStr", new DateTime(orgCompany.getCreateTime()).toString("yyyy-MM-dd HH:mm"));
@@ -110,55 +102,31 @@ public class OrgCompanyAjaxController {
     }
 
     @RequestMapping("/getById")
-    public String getById(Integer id) {
+    public String getById(Integer id)
+    {
         JSONObject jsonObject = new JSONObject();
         OrgCompany orgCompany = orgCompanyService.selectById(id);
-        if (orgCompany != null) {
+        if (orgCompany != null)
+        {
             BeanMap roleBeanMap = BeanMap.create(new OrgCompany());
             roleBeanMap.setBean(orgCompany);
             Map branchInstMap = new HashMap<>();
             branchInstMap.putAll(roleBeanMap);
             jsonObject.put("success", Boolean.TRUE);
             jsonObject.put("orgCompany", branchInstMap);
-        } else {
+        } else
+        {
             jsonObject.put("success", Boolean.FALSE);
         }
         return jsonObject.toString();
     }
 
     @RequestMapping("/deleteOrgCompany")
-    public String deleteOrgCompany(String ids) {
+    public String deleteOrgCompany(String ids)
+    {
         JSONObject jsonObject = new JSONObject();
         jsonObject.put("success", orgCompanyService.deleteOrgCompany(ids));
         return jsonObject.toString();
     }
 
-    @RequestMapping("/uploadExcel")
-    public String uploadExcel(@RequestParam MultipartFile file) {
-        JSONObject jsonObject = new JSONObject();
-        String imgName = new Date().getTime() + ".jpg";
-        if (!excelDir.endsWith(File.separator)) {
-            excelDir = excelDir + File.separator;
-        }
-        if (!excelDir_BY.endsWith(File.separator)) {
-            excelDir_BY = excelDir_BY + File.separator;
-        }
-        String uploadDir = excelDir + "excel" + File.separator;
-        String uploadDir_BY = excelDir_BY + "excel" + File.separator;
-        File newFile = new File(uploadDir);
-        if (!newFile.exists()) {
-            newFile.mkdirs();
-        }
-        try {
-            FileUtils.copyInputStreamToFile(file.getInputStream(), new File(uploadDir, imgName));
-            FileUtils.copyFile(new File(uploadDir + imgName), new File(uploadDir_BY + imgName));
-            jsonObject.put("success", true);
-            jsonObject.put("imgUrl", imgUrl + "/excel/" + imgName);
-            jsonObject.put("file_path", imgUrl + "/excel/" + imgName);
-        } catch (IOException e) {
-            e.printStackTrace();
-            jsonObject.put("success", false);
-        }
-        return jsonObject.toString();
-    }
 }
