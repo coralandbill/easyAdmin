@@ -41,8 +41,7 @@ public class ExcelFileServiceImpl implements ExcelFileService {
     private CompanyDangerMapper companyDangerMapper;
 
     @Override
-    public List<ExcelFile> listExcelFile(Map<String, Object> paramsMap)
-    {
+    public List<ExcelFile> listExcelFile(Map<String, Object> paramsMap) {
         int startPos = (int) paramsMap.get("startPos");
         int pageSize = (int) paramsMap.get("pageSize");
         String fileName = (String) paramsMap.get("fileName");
@@ -51,8 +50,7 @@ public class ExcelFileServiceImpl implements ExcelFileService {
         ExcelFileExample excelFileExample = new ExcelFileExample();
         ExcelFileExample.Criteria criteria = excelFileExample.createCriteria();
         criteria.andCompanyIdEqualTo(companyId);
-        if (StringUtils.isNotBlank(fileName))
-        {
+        if (StringUtils.isNotBlank(fileName)) {
             criteria.andFileNameLike("%" + fileName + "%");
         }
         excelFileExample.setOrderByClause("createTime desc" + " limit " + startPos + "," + pageSize);
@@ -61,15 +59,13 @@ public class ExcelFileServiceImpl implements ExcelFileService {
     }
 
     @Override
-    public int countExcelFile(Map<String, Object> paramsMap)
-    {
+    public int countExcelFile(Map<String, Object> paramsMap) {
         Integer companyId = (Integer) paramsMap.get("companyId");
         String fileName = (String) paramsMap.get("fileName");
         ExcelFileExample excelFileExample = new ExcelFileExample();
         ExcelFileExample.Criteria criteria = excelFileExample.createCriteria();
         criteria.andCompanyIdEqualTo(companyId);
-        if (StringUtils.isNotBlank(fileName))
-        {
+        if (StringUtils.isNotBlank(fileName)) {
             criteria.andFileNameLike("%" + fileName + "%");
         }
 
@@ -77,8 +73,7 @@ public class ExcelFileServiceImpl implements ExcelFileService {
     }
 
     @Override
-    public boolean saveExcelFile(Map<String, Object> paramsMap)
-    {
+    public Integer saveExcelFile(Map<String, Object> paramsMap) {
         ExcelFile excelFile = new ExcelFile();
         excelFile.setCompanyId((Integer) paramsMap.get("companyId"));
         excelFile.setFileName((String) paramsMap.get("fileName"));
@@ -90,15 +85,14 @@ public class ExcelFileServiceImpl implements ExcelFileService {
         excelFile.setCreator((Integer) paramsMap.get("creator"));
         excelFile.setState(0);
         excelFile.setCreateTime(new Date());
-        return excelFileMapper.insert(excelFile) > 0;
+        excelFileMapper.insert(excelFile);
+        return excelFile.getId() == null ? -1 : excelFile.getId();
     }
 
     @Override
-    public boolean analysisXls(String filePath, Integer companyId, String fileDate, Integer creator)
-    {
+    public boolean analysisXls(String filePath, Integer companyId, String fileDate, Integer creator, Integer fileId) {
         Map<String, Object> detailMap = ExcelUtils.analysisXls(filePath);
-        if (!detailMap.isEmpty())
-        {
+        if (!detailMap.isEmpty()) {
             //开始解析数据
             //1.获取基本数据进行保存
             OneCompanyOneRecordWithBLOBs oneRecord = new OneCompanyOneRecordWithBLOBs();
@@ -122,14 +116,12 @@ public class ExcelFileServiceImpl implements ExcelFileService {
             oneRecord.setDocumentDate(DateTime.parse(fileDate, DateTimeFormat.forPattern("yyyy-MM-dd")).toDate());
             oneRecord.setCreateTime(new Date());
             oneRecord.setCreator(creator);
-            if (oneCompanyOneRecordMapper.insert(oneRecord) > 0)
-            {
+            oneRecord.setFileId(fileId);
+            if (oneCompanyOneRecordMapper.insert(oneRecord) > 0) {
                 //保存危废列表
                 List<Map<String, Object>> wfList = (List) detailMap.get("wfList");
-                if (wfList != null && wfList.size() > 0)
-                {
-                    for (Map map : wfList)
-                    {
+                if (wfList != null && wfList.size() > 0) {
+                    for (Map map : wfList) {
                         CompanyDanger companyDanger = new CompanyDanger();
                         companyDanger.setName(map.get("name") == null ? "" : (String) map.get("name"));
                         companyDanger.setWf_type(map.get("wf_type") == null ? "" : (String) map.get("wf_type"));
@@ -140,6 +132,7 @@ public class ExcelFileServiceImpl implements ExcelFileService {
                         companyDanger.setCreateTime(new Date());
                         companyDanger.setCreator(creator);
                         companyDanger.setOneRecordId(oneRecord.getId());
+                        companyDanger.setFileId(fileId);
                         companyDangerMapper.insert(companyDanger);
                     }
                 }

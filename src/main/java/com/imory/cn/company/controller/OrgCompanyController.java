@@ -96,14 +96,14 @@ public class OrgCompanyController {
         }
         if (orgCompanyId != null)
         {
+            orgCompany.setUpdateTime(new Date());
+            jsonObject.put("success", orgCompanyService.updateOrgCompany(orgCompany));
+        } else
+        {
             orgCompany.setState(0);
             orgCompany.setCreateTime(new Date());
             orgCompany.setCreator(adminUser.getId());
             orgCompany.setEnable(Boolean.FALSE);
-            jsonObject.put("success", orgCompanyService.updateOrgCompany(orgCompany));
-        } else
-        {
-            orgCompany.setUpdateTime(new Date());
             jsonObject.put("success", orgCompanyService.saveOrgCompany(orgCompany));
         }
 

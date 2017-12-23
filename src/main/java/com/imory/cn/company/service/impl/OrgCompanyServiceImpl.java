@@ -1,6 +1,9 @@
 package com.imory.cn.company.service.impl;
 
+import com.imory.cn.company.dao.CompanyDangerMapper;
 import com.imory.cn.company.dao.OrgCompanyMapper;
+import com.imory.cn.company.dto.CompanyDanger;
+import com.imory.cn.company.dto.CompanyDangerExample;
 import com.imory.cn.company.dto.OrgCompany;
 import com.imory.cn.company.dto.OrgCompanyExample;
 import com.imory.cn.company.service.OrgCompanyService;
@@ -25,6 +28,9 @@ public class OrgCompanyServiceImpl implements OrgCompanyService {
 
     @Autowired
     private OrgCompanyMapper orgCompanyMapper;
+
+    @Autowired
+    private CompanyDangerMapper companyDangerMapper;
 
     @Override
     public boolean saveOrgCompany(OrgCompany orgCompany) {
@@ -88,5 +94,14 @@ public class OrgCompanyServiceImpl implements OrgCompanyService {
             orgCompanyMapper.updateByPrimaryKey(orgCompany);
         }
         return true;
+    }
+
+    @Override
+    public List<CompanyDanger> listCompanyDanger(Integer fileId) {
+        CompanyDangerExample companyDangerExample = new CompanyDangerExample();
+        CompanyDangerExample.Criteria criteria = companyDangerExample.createCriteria();
+        criteria.andFileIdEqualTo(fileId);
+        companyDangerExample.setOrderByClause("orderNum asc");
+        return companyDangerMapper.selectByExample(companyDangerExample);
     }
 }

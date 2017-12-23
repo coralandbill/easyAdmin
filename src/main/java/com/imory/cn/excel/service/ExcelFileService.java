@@ -20,8 +20,8 @@ public interface ExcelFileService {
 
     int countExcelFile(Map<String, Object> paramsMap);
 
-    boolean saveExcelFile(Map<String, Object> paramsMap);
+    Integer saveExcelFile(Map<String, Object> paramsMap);
 
-    boolean analysisXls(String filePath, Integer companyId, String fileDate, Integer creator);
+    boolean analysisXls(String filePath, Integer companyId, String fileDate, Integer creator, Integer fileId);
 
 }

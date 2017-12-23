@@ -46,8 +46,7 @@ public class ExcelFileAjaxController {
     private ExcelFileService excelFileService;
 
     @RequestMapping("/listCompanyFile")
-    public String listCompanyFile(String search, Integer limit, Integer offset, Integer companyId)
-    {
+    public String listCompanyFile(String search, Integer limit, Integer offset, Integer companyId) {
         if (search == null) search = "";
 
         Map<String, Object> paramsMap = new HashMap<>();
@@ -61,13 +60,11 @@ public class ExcelFileAjaxController {
         List<Map> resultList = new ArrayList<>();
         List<ExcelFile> excelFileList = excelFileService.listExcelFile(paramsMap);
         BeanMap fileBeanMap = BeanMap.create(new ExcelFile());
-        for (ExcelFile excelFile : excelFileList)
-        {
+        for (ExcelFile excelFile : excelFileList) {
             fileBeanMap.setBean(excelFile);
             Map branchInstMap = new HashMap<>();
             branchInstMap.put("createTimeStr", new DateTime(excelFile.getCreateTime()).toString("yyyy-MM-dd HH:mm"));
-            if (excelFile.getUpdateTime() != null)
-            {
+            if (excelFile.getUpdateTime() != null) {
                 branchInstMap.put("updateTimeStr", new DateTime(excelFile.getUpdateTime()).toString("yyyy-MM-dd HH:mm"));
             }
             branchInstMap.put("fileDateStr", new DateTime(excelFile.getFileDate()).toString("yyyy-MM-dd"));
@@ -84,8 +81,7 @@ public class ExcelFileAjaxController {
     }
 
     @RequestMapping("/saveExcelFile")
-    public String saveExcelFile(@RequestParam MultipartFile excelFile, String fileDate, Integer companyId, HttpSession session)
-    {
+    public String saveExcelFile(@RequestParam MultipartFile excelFile, String fileDate, Integer companyId, HttpSession session) {
         AdminUser adminUser = (AdminUser) session.getAttribute(AdminUser.SESSION_ID);
 
         JSONObject jsonObject = new JSONObject();
@@ -94,23 +90,19 @@ public class ExcelFileAjaxController {
         String suffix = fileName.substring(fileName.lastIndexOf("."));
 
         String excelName = new Date().getTime() + suffix;
-        if (!excelDir.endsWith(File.separator))
-        {
+        if (!excelDir.endsWith(File.separator)) {
             excelDir = excelDir + File.separator;
         }
-        if (!excelDir_BY.endsWith(File.separator))
-        {
+        if (!excelDir_BY.endsWith(File.separator)) {
             excelDir_BY = excelDir_BY + File.separator;
         }
         String uploadDir = excelDir + "excel" + File.separator;
         String uploadDir_BY = excelDir_BY + "excel" + File.separator;
         File newFile = new File(uploadDir);
-        if (!newFile.exists())
-        {
+        if (!newFile.exists()) {
             newFile.mkdirs();
         }
-        try
-        {
+        try {
             //上传到本地
             FileUtils.copyInputStreamToFile(excelFile.getInputStream(), new File(uploadDir, fileName));
             //copy备份文件
@@ -128,19 +120,17 @@ public class ExcelFileAjaxController {
             paramsMap.put("fileUrlBak", webUrl + "/excel/" + excelName);
             paramsMap.put("filePath", uploadDir);
             paramsMap.put("creator", adminUser.getId());
-            if (excelFileService.saveExcelFile(paramsMap))
-            {
+            Integer fileId = excelFileService.saveExcelFile(paramsMap);
+            if (fileId != -1) {
                 //开始解析文件
-                jsonObject.put("success", excelFileService.analysisXls(uploadDir + excelName, companyId, fileDate, adminUser.getId()));
-            } else
-            {
+                jsonObject.put("success", excelFileService.analysisXls(uploadDir + excelName, companyId, fileDate, adminUser.getId(), fileId));
+            } else {
                 //开始解析文件
                 jsonObject.put("success", false);
             }
             jsonObject.put("webUrl", webUrl + "/excel/" + excelName);
             jsonObject.put("file_path", webUrl + "/excel/" + excelName);
-        } catch (IOException e)
-        {
+        } catch (IOException e) {
             e.printStackTrace();
             jsonObject.put("success", false);
         }
