@@ -152,9 +152,9 @@ public class OrgCompanyAjaxController {
     }
 
     @RequestMapping("/saveCompanyDanger")
-    public String saveCompanyDanger(String data) {
+    public String saveCompanyDanger(String data, Integer fileId) {
         JSONObject jsonObject = new JSONObject();
-        jsonObject.put("success", orgCompanyService.updateDangerAndTransfer(data));
+        jsonObject.put("success", orgCompanyService.updateDangerAndTransfer(data, fileId));
         return jsonObject.toString();
     }
 }

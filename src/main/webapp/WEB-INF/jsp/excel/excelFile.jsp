@@ -135,6 +135,22 @@
         </div>
     </div>
 </div>
+<div class="modal fade" tabindex="-1" role="dialog" id="downModel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span>
+                </button>
+                <h4 class="modal-title">文件下载</h4>
+            </div>
+            <div class="modal-body" style="text-align: center;" id="downModelBody">
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
 <script src="/scripts/jquery.min.js?v=2.1.4"></script>
 <script src="/scripts/bootstrap.min.js?v=3.3.6"></script>
 <script src="/scripts/plugins/jquery-validate/jquery.validate.min.js"></script>
@@ -148,7 +164,25 @@
 <script src="/scripts/ajaxfileupload.js"></script>
 <script>
 
+    function downFile(url) {
+        location.href = url;
+    }
+
+    function doUpload() {
+        $("#exampleModal").modal("show");
+    }
+
+    function goDownLoad(url, newUrl) {
+        var _html = '<a  target="_blank" href="' + url + '" class="btn btn-outline btn-default">下载原文件</a>';
+        if (newUrl.length > 0) {
+            _html += '<a target="_blank" href="' + newUrl + '" class="btn btn-outline btn-default">下载一企一档更新表格</a>';
+        }
+        $("#downModelBody").html(_html);
+        $("#downModel").modal("show");
+    }
+
     function updateFile() {
+        var fileId = $("#myModal5").attr("fileId");
         var _yearVal = $("#yearVal").val();
         if (_yearVal.length == 0) {
             layer.msg("请输入统计量年份", {time: 1000}, function () {
@@ -191,6 +225,7 @@
             dataType: "json",
             type: "POST",
             data: {
+                fileId: fileId,
                 data: JSON.stringify(dataArr)
             },
             success: function (data) {
@@ -335,18 +370,16 @@
         }
     }
 
-    function czFun(value) {
+    function czFun(value, row, index) {
         var _html = '';
         <c:if test="${hasUpdateFlag}">
         _html += '<button type="button" onclick="updateData(' + value + ');" class="btn btn-outline btn-primary edit">更新数据</button>';
         </c:if>
-        _html += '<svg style="margin-left: 10px;" class="icon" onclick="doUpload();" aria-hidden="true"><use xlink:href="#icon-xiazai"></use></svg>';
+        _html += '<svg style="margin-left: 10px;" class="icon" onclick="goDownLoad(\'' + row.fileUrlBak + '\',\''
+            + (row.fileCompanyUrl == undefined ? "" : row.fileCompanyUrl) + '\');" aria-hidden="true"><use xlink:href="#icon-xiazai"></use></svg>';
         return _html;
     }
 
-    function doUpload() {
-        $("#exampleModal").modal("show");
-    }
 
     $("#exampleTableEvents").bootstrapTable({
         url: "/admin/excelFileAjax/listCompanyFile.do?companyId=${companyId}",
