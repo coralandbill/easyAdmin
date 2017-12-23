@@ -137,7 +137,7 @@ public class ExcelUtils {
 
                 //危废列表
                 List<Map<String, Object>> wfList = new ArrayList<>();
-                for (int i = 0; i < rowNums - 13; i++) {
+                for (int i = 0; i < rowNums - 12; i++) {
                     Map<String, Object> map = new HashMap<>();
                     row = sheet.getRow(9 + i);
                     //危废名称
@@ -181,6 +181,7 @@ public class ExcelUtils {
             switch (cell.getCellTypeEnum()) {
                 case NUMERIC: //数字
                     value = String.valueOf(cell.getNumericCellValue());
+                    //value = cell.getStringCellValue();
                     break;
                 case STRING:
                     value = cell.getStringCellValue();

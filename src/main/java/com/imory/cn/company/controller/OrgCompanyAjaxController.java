@@ -2,10 +2,12 @@ package com.imory.cn.company.controller;
 
 import com.imory.cn.admin.dto.AdminUser;
 import com.imory.cn.company.dto.CompanyDanger;
+import com.imory.cn.company.dto.CompanyTransfer;
 import com.imory.cn.company.dto.OrgCompany;
 import com.imory.cn.company.service.OrgCompanyService;
 import com.imory.cn.utils.GetTotalPageNumUtil;
 import org.joda.time.DateTime;
+import org.json.JSONArray;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cglib.beans.BeanMap;
@@ -133,8 +135,26 @@ public class OrgCompanyAjaxController {
             resultList.add(branchInstMap);
         }
 
-        jsonObject.put("rows", resultList);
+        List<Map> transferList = new ArrayList<>();
+        List<CompanyTransfer> companyTransferList = orgCompanyService.listCompanyTransfer(fileId);
+        roleBeanMap = BeanMap.create(new CompanyTransfer());
+        for (CompanyTransfer companyTransfer : companyTransferList) {
+            roleBeanMap.setBean(companyTransfer);
+            Map branchInstMap = new HashMap<>();
+            branchInstMap.putAll(roleBeanMap);
+            transferList.add(branchInstMap);
+        }
+
+        jsonObject.put("success", true);
+        jsonObject.put("resultList", resultList);
+        jsonObject.put("transferList", transferList);
         return jsonObject.toString();
     }
 
+    @RequestMapping("/saveCompanyDanger")
+    public String saveCompanyDanger(String data) {
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put("success", orgCompanyService.updateDangerAndTransfer(data));
+        return jsonObject.toString();
+    }
 }

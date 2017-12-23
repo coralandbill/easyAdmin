@@ -1,6 +1,7 @@
 package com.imory.cn.company.service;
 
 import com.imory.cn.company.dto.CompanyDanger;
+import com.imory.cn.company.dto.CompanyTransfer;
 import com.imory.cn.company.dto.OrgCompany;
 
 import java.util.List;
@@ -30,4 +31,8 @@ public interface OrgCompanyService {
     boolean deleteOrgCompany(String ids);
 
     List<CompanyDanger> listCompanyDanger(Integer fileId);
+
+    List<CompanyTransfer> listCompanyTransfer(Integer fileId);
+
+    boolean updateDangerAndTransfer(String data);
 }

@@ -1,8 +1,10 @@
 package com.imory.cn.excel.service.impl;
 
 import com.imory.cn.company.dao.CompanyDangerMapper;
+import com.imory.cn.company.dao.CompanyTransferMapper;
 import com.imory.cn.company.dao.OneCompanyOneRecordMapper;
 import com.imory.cn.company.dto.CompanyDanger;
+import com.imory.cn.company.dto.CompanyTransfer;
 import com.imory.cn.company.dto.OneCompanyOneRecordWithBLOBs;
 import com.imory.cn.excel.dao.ExcelFileMapper;
 import com.imory.cn.excel.dto.ExcelFile;
@@ -39,6 +41,9 @@ public class ExcelFileServiceImpl implements ExcelFileService {
 
     @Autowired
     private CompanyDangerMapper companyDangerMapper;
+
+    @Autowired
+    private CompanyTransferMapper companyTransferMapper;
 
     @Override
     public List<ExcelFile> listExcelFile(Map<String, Object> paramsMap) {
@@ -120,20 +125,28 @@ public class ExcelFileServiceImpl implements ExcelFileService {
             if (oneCompanyOneRecordMapper.insert(oneRecord) > 0) {
                 //保存危废列表
                 List<Map<String, Object>> wfList = (List) detailMap.get("wfList");
-                if (wfList != null && wfList.size() > 0) {
-                    for (Map map : wfList) {
-                        CompanyDanger companyDanger = new CompanyDanger();
-                        companyDanger.setName(map.get("name") == null ? "" : (String) map.get("name"));
-                        companyDanger.setWf_type(map.get("wf_type") == null ? "" : (String) map.get("wf_type"));
-                        companyDanger.setWf_code(map.get("wf_code") == null ? "" : (String) map.get("wf_code"));
-                        companyDanger.setWf_ta(map.get("wf_ta") == null ? "0.00" : (String) map.get("wf_ta"));
-                        companyDanger.setDirection(map.get("direction") == null ? "" : (String) map.get("direction"));
-                        companyDanger.setOrderNum(map.get("orderNum") == null ? 0 : (int) map.get("orderNum"));
-                        companyDanger.setCreateTime(new Date());
-                        companyDanger.setCreator(creator);
-                        companyDanger.setOneRecordId(oneRecord.getId());
-                        companyDanger.setFileId(fileId);
-                        companyDangerMapper.insert(companyDanger);
+                for (int i = 0; i < wfList.size(); i++) {
+                    Map map = wfList.get(i);
+                    CompanyDanger companyDanger = new CompanyDanger();
+                    companyDanger.setName(map.get("name") == null ? "" : (String) map.get("name"));
+                    companyDanger.setWf_type(map.get("wf_type") == null ? "" : (String) map.get("wf_type"));
+                    companyDanger.setWf_code(map.get("wf_code") == null ? "" : (String) map.get("wf_code"));
+                    companyDanger.setWf_ta(map.get("wf_ta") == null ? "0.00" : (String) map.get("wf_ta"));
+                    companyDanger.setDirection(map.get("direction") == null ? "" : (String) map.get("direction"));
+                    companyDanger.setOrderNum(map.get("orderNum") == null ? 0 : (int) map.get("orderNum"));
+                    companyDanger.setCreateTime(new Date());
+                    companyDanger.setCreator(creator);
+                    companyDanger.setOneRecordId(oneRecord.getId());
+                    companyDanger.setFileId(fileId);
+                    companyDangerMapper.insert(companyDanger);
+
+                    if (i != 0) {
+                        //保存转移量
+                        CompanyTransfer companyTransfer = new CompanyTransfer();
+                        companyTransfer.setFileId(fileId);
+                        companyTransfer.setCreateTime(new Date());
+                        companyTransfer.setOrderNum(map.get("orderNum") == null ? 0 : (int) map.get("orderNum"));
+                        companyTransferMapper.insert(companyTransfer);
                     }
                 }
                 return true;

@@ -111,49 +111,26 @@
         </div>
     </div>
 </div>
-<div class="modal fade" id="myModal5" tabindex="-1" role="dialog"  aria-hidden="true">
+<div class="modal fade" id="myModal5" tabindex="-1" role="dialog" aria-hidden="true" fileId="">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span
+                        class="sr-only">Close</span></button>
                 <h3 class="modal-title">危险废物产生量及处置去向</h3>
             </div>
-            <div class="modal-body">
+            <div class="modal-body" id="modalBody" style="height: 500px;overflow: auto;">
                 <table class="table table-bordered">
                     <thead>
-                    <tr>
-                        <th>危废名称</th>
-                        <th>危废类别</th>
-                        <th>危废代码</th>
-                        <th>年龄</th>
-                    </tr>
+                    <tr id="tabTitle1"></tr>
                     </thead>
-                    <tbody>
-                    <tr>
-                        <td>1</td>
-                        <td>张三</td>
-                        <td>男</td>
-                        <td>23</td>
-                    </tr>
-                    <tr>
-                        <td>2</td>
-                        <td>李四</td>
-                        <td>男</td>
-                        <td>27</td>
-                    </tr>
-                    <tr>
-                        <td>3</td>
-                        <td>王麻子</td>
-                        <td>男</td>
-                        <td>65</td>
-                    </tr>
+                    <tbody id="tabTbody1">
                     </tbody>
                 </table>
             </div>
-
             <div class="modal-footer">
                 <button type="button" class="btn btn-white" data-dismiss="modal">关闭</button>
-                <button type="button" class="btn btn-primary">保存</button>
+                <button type="button" class="btn btn-primary" onclick="updateFile();">保存</button>
             </div>
         </div>
     </div>
@@ -170,6 +147,118 @@
 <script src="/scripts/bootstrap-datetimepicker.min.js"></script>
 <script src="/scripts/ajaxfileupload.js"></script>
 <script>
+
+    function updateFile() {
+        var _yearVal = $("#yearVal").val();
+        if (_yearVal.length == 0) {
+            layer.msg("请输入统计量年份", {time: 1000}, function () {
+                $("#yearVal").focus();
+            });
+            return;
+        }
+        var dataArr = [];
+        var thObj = new Object();
+        thObj.dangerId = $("#tabTitle1").attr("dangerId");
+        thObj.transferId = $("#tabTitle1").attr("transferId");
+        thObj.name = $("#tabTitle1").find("th").eq(0).text();
+        thObj.wf_type = $("#tabTitle1").find("th").eq(1).text();
+        thObj.wf_code = $("#tabTitle1").find("th").eq(2).text();
+        thObj.totalNum = $("#tabTitle1").find("th").eq(3).find("input").eq(0).val();
+        thObj.recentlyNum = $("#tabTitle1").find("th").eq(4).text();
+        thObj.recentlyDirection = $("#tabTitle1").find("th").eq(5).text();
+        thObj.recentlyDate = $("#tabTitle1").find("th").eq(6).text();
+        thObj.yearNum = $("#tabTitle1").find("th").eq(7).text();
+        thObj.repertoryNum = $("#tabTitle1").find("th").eq(8).text();
+        dataArr.push(thObj);
+        $("#tabTbody1").find("tr").each(function () {
+            var trObj = new Object();
+            trObj.name = $(this).find("td").eq(0).text();
+            trObj.dangerId = $(this).attr("dangerId");
+            trObj.transferId = $(this).attr("transferId");
+            trObj.wf_type = $(this).find("td").eq(1).text();
+            trObj.wf_code = $(this).find("td").eq(2).text();
+            trObj.totalNum = $(this).find("td").eq(3).find("input").eq(0).val();
+            trObj.recentlyNum = $(this).find("td").eq(4).find("input").eq(0).val();
+            trObj.recentlyDirection = $(this).find("td").eq(5).find("input").eq(0).val();
+            trObj.recentlyDate = $(this).find("td").eq(6).find("input").eq(0).val();
+            trObj.yearNum = $(this).find("td").eq(7).find("input").eq(0).val();
+            trObj.repertoryNum = $(this).find("td").eq(8).find("input").eq(0).val();
+            dataArr.push(trObj);
+        });
+        $.ajax({
+            url: "/admin/orgCompanyAjax/saveCompanyDanger.do",
+            contentType: "application/x-www-form-urlencoded; charset=utf-8",
+            dataType: "json",
+            type: "POST",
+            data: {
+                data: JSON.stringify(dataArr)
+            },
+            success: function (data) {
+                if (data.success) {
+                    layer.msg("保存成功");
+                    $("#myModal5").modal("hide");
+                }
+                else {
+                    layer.msg("操作失败");
+                }
+            }
+        });
+    }
+
+    function updateData(fileId) {
+        //加载数据
+        $.ajax({
+            url: "/admin/orgCompanyAjax/listCompanyDanger.do",
+            contentType: "application/x-www-form-urlencoded; charset=utf-8",
+            dataType: "json",
+            type: "POST",
+            data: {
+                fileId: fileId
+            },
+            success: function (data) {
+                if (data.success) {
+                    $("#tabTbody1").html("");
+                    var rowsList = data.resultList;
+                    var transferList = data.transferList;
+                    var _title = rowsList[0];
+                    var _titleHtml = "<th>" + _title.name + "</th>";
+                    _titleHtml += "<th>" + _title.wf_type + "</th>";
+                    _titleHtml += "<th>" + _title.wf_code + "</th>";
+                    _titleHtml += "<th><input type='text' size='4' id='yearVal' value='" + (_title.totalNum == undefined ? "" : _title.totalNum) + "'/>年统计量</th>";
+                    _titleHtml += "<th>最近一次转移量</th>";
+                    _titleHtml += "<th>最近一次转移去向</th>";
+                    _titleHtml += "<th>最近一次转移日期</th>";
+                    _titleHtml += "<th>本年度转移量</th>";
+                    _titleHtml += "<th>系统预计库存量</th>";
+                    $("#tabTitle1").html(_titleHtml);
+                    $("#tabTitle1").attr("dangerId", _title.id);
+                    $("#tabTitle1").attr("transferId", transferList[0].id);
+                    for (var i = 1; i < rowsList.length; i++) {
+                        var _dataTr = rowsList[i];
+                        var _dataTrs = transferList[i - 1];
+                        var _trHtml = "<tr dangerId=" + _dataTr.id + " transferId=" + _dataTrs.id + ">";
+                        _trHtml += "<td>" + _dataTr.name + "</td>";
+                        _trHtml += "<td>" + _dataTr.wf_type + "</td>";
+                        _trHtml += "<td>" + _dataTr.wf_code + "</td>";
+                        _trHtml += "<td><input type='text' size='6' value='" + (_dataTr.totalNum == undefined ? "" : _dataTr.totalNum) + "'/></td>";
+
+                        _trHtml += "<td><input type='text' size='6' value='" + (_dataTrs.recentlyNum == undefined ? '' : _dataTrs.recentlyNum) + "'/></td>";
+                        _trHtml += "<td><input type='text' size='6' value='" + (_dataTrs.recentlyDirection == undefined ? '' : _dataTrs.recentlyDirection) + "'/></td>";
+                        _trHtml += "<td><input type='text' size='6' value='" + (_dataTrs.recentlyDate == undefined ? '' : _dataTrs.recentlyDate) + "'/></td>";
+                        _trHtml += "<td><input type='text' size='6' value='" + (_dataTrs.yearNum == undefined ? '' : _dataTrs.yearNum) + "'/></td>";
+                        _trHtml += "<td><input type='text' size='6' value='" + (_dataTrs.repertoryNum == undefined ? '' : _dataTrs.repertoryNum) + "'/></td>";
+                        _trHtml += "</tr>";
+                        $("#tabTbody1").append(_trHtml);
+                    }
+                }
+                else {
+                    layer.msg("操作失败");
+                }
+            }
+        });
+        $("#myModal5").attr("fileId", fileId);
+        $("#myModal5").modal("show");
+    }
 
     $("#commentForm").validate({
         rules: {
@@ -238,22 +327,14 @@
     });
 
     function ztFun(value) {
-        if(value == 0)
-        {
+        if (value == 0) {
             return "未处理";
         }
-        else
-        {
+        else {
             return "已处理";
         }
     }
 
-    function updateData() {
-        //加载数据
-
-        $("#myModal5").modal("show");
-    }
-    
     function czFun(value) {
         var _html = '';
         <c:if test="${hasUpdateFlag}">
