@@ -26,26 +26,20 @@ public class ExcelUtils {
 
     private static final String EXCEL_XLSX_NAME = ".xlsx";
 
-    public static void main(String args[])
-    {
+    public static void main(String args[]) {
         System.out.println(ExcelUtils.analysisXls("/Users/jzb/Desktop/单位全称危废调查表.xls"));
     }
 
-    public static Workbook getWorkBook(String filePath)
-    {
+    public static Workbook getWorkBook(String filePath) {
         Workbook workbook = null;
-        try
-        {
+        try {
             InputStream inputStream = new FileInputStream(filePath);
-            if (filePath.endsWith(ExcelUtils.EXCEL_XLS_NAME))
-            {
+            if (filePath.endsWith(ExcelUtils.EXCEL_XLS_NAME)) {
                 workbook = new HSSFWorkbook(inputStream);
-            } else if (filePath.endsWith(ExcelUtils.EXCEL_XLSX_NAME))
-            {
+            } else if (filePath.endsWith(ExcelUtils.EXCEL_XLSX_NAME)) {
                 workbook = new XSSFWorkbook(inputStream);
             }
-        } catch (Exception e)
-        {
+        } catch (Exception e) {
             e.printStackTrace();
         }
         return workbook;
@@ -57,15 +51,12 @@ public class ExcelUtils {
      * @param filePath
      * @return
      */
-    public static Map<String, Object> analysisXls(String filePath)
-    {
+    public static Map<String, Object> analysisXls(String filePath) {
         Map<String, Object> detailMap = new HashMap<>();
-        try
-        {
+        try {
             Workbook workbook = ExcelUtils.getWorkBook(filePath);
             Sheet sheet = workbook.getSheet("一企一档管理");
-            if (sheet != null)
-            {
+            if (sheet != null) {
                 int rowNums = sheet.getPhysicalNumberOfRows();
 
                 //获取第二行数据：单位名称
@@ -146,10 +137,9 @@ public class ExcelUtils {
 
                 //危废列表
                 List<Map<String, Object>> wfList = new ArrayList<>();
-                for (int i = 0; i < rowNums - 13; i++)
-                {
+                for (int i = 0; i < rowNums - 13; i++) {
                     Map<String, Object> map = new HashMap<>();
-                    row = sheet.getRow(10 + i);
+                    row = sheet.getRow(9 + i);
                     //危废名称
                     cell = row.getCell(1);
                     map.put("name", getCellValue(cell));
@@ -170,7 +160,7 @@ public class ExcelUtils {
                     cell = row.getCell(5);
                     map.put("direction", getCellValue(cell));
 
-                    map.put("orderNum", i + 1);
+                    map.put("orderNum", i);
 
                     wfList.add(map);
                 }
@@ -178,21 +168,17 @@ public class ExcelUtils {
                 System.out.println(detailMap);
             }
 
-        } catch (Exception e)
-        {
+        } catch (Exception e) {
             e.printStackTrace();
         }
 
         return detailMap;
     }
 
-    public static String getCellValue(Cell cell)
-    {
+    public static String getCellValue(Cell cell) {
         String value;
-        if (cell != null)
-        {
-            switch (cell.getCellTypeEnum())
-            {
+        if (cell != null) {
+            switch (cell.getCellTypeEnum()) {
                 case NUMERIC: //数字
                     value = String.valueOf(cell.getNumericCellValue());
                     break;
@@ -218,8 +204,7 @@ public class ExcelUtils {
                     value = "未知类型(默认)";
                     break;
             }
-        } else
-        {
+        } else {
             value = "";
         }
         return value;

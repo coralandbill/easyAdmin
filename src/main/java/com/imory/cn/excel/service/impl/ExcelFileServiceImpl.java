@@ -126,7 +126,7 @@ public class ExcelFileServiceImpl implements ExcelFileService {
                         companyDanger.setName(map.get("name") == null ? "" : (String) map.get("name"));
                         companyDanger.setWf_type(map.get("wf_type") == null ? "" : (String) map.get("wf_type"));
                         companyDanger.setWf_code(map.get("wf_code") == null ? "" : (String) map.get("wf_code"));
-                        companyDanger.setWf_ta(map.get("wf_code") == null ? 0.00 : Double.valueOf((String) map.get("wf_code")));
+                        companyDanger.setWf_ta(map.get("wf_ta") == null ? "0.00" : (String) map.get("wf_ta"));
                         companyDanger.setDirection(map.get("direction") == null ? "" : (String) map.get("direction"));
                         companyDanger.setOrderNum(map.get("orderNum") == null ? 0 : (int) map.get("orderNum"));
                         companyDanger.setCreateTime(new Date());

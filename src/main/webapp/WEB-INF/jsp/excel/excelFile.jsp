@@ -34,7 +34,7 @@
                             <div class="btn-group hidden-xs" id="exampleTableEventsToolbar" role="group">
                                 <c:if test="${hasUploadFlag}">
                                     <span><a href="javascript:doUpload();">上传<svg class="icon" aria-hidden="true"><use
-                                            xlink:href="#icon-shangchuan3"></use></svg></span></a>
+                                            xlink:href="#icon-shangchuan3"></use></svg></a></span>
                                 </c:if>
                                 <small>
                                     <c:choose>
@@ -83,7 +83,7 @@
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span>
                 </button>
-                <h4 class="modal-title" id="exampleModalLabel">添加角色</h4>
+                <h4 class="modal-title" id="exampleModalLabel">添加文件</h4>
             </div>
             <div class="modal-body">
                 <form id="commentForm" class="form-horizontal" enctype="multipart/form-data">
@@ -111,16 +111,44 @@
         </div>
     </div>
 </div>
-<div class="modal inmodal fade" id="myModal5" tabindex="-1" role="dialog"  aria-hidden="true">
+<div class="modal fade" id="myModal5" tabindex="-1" role="dialog"  aria-hidden="true">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-                <h4 class="modal-title">窗口标题</h4>
-                <small class="font-bold">这里可以显示副标题。
+                <h3 class="modal-title">危险废物产生量及处置去向</h3>
             </div>
             <div class="modal-body">
-                <p><strong>H+</strong> 是一个完全响应式，基于Bootstrap3.3.6最新版本开发的扁平化主题，她采用了主流的左右两栏式布局，使用了Html5+CSS3等现代技术，她提供了诸多的强大的可以重新组合的UI组件，并集成了最新的jQuery版本(v2.1.1)，当然，也集成了很多功能强大，用途广泛的jQuery插件，她可以用于所有的Web应用程序，如网站管理后台，网站会员中心，CMS，CRM，OA等等，当然，您也可以对她进行深度定制，以做出更强系统。</p>
+                <table class="table table-bordered">
+                    <thead>
+                    <tr>
+                        <th>危废名称</th>
+                        <th>危废类别</th>
+                        <th>危废代码</th>
+                        <th>年龄</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr>
+                        <td>1</td>
+                        <td>张三</td>
+                        <td>男</td>
+                        <td>23</td>
+                    </tr>
+                    <tr>
+                        <td>2</td>
+                        <td>李四</td>
+                        <td>男</td>
+                        <td>27</td>
+                    </tr>
+                    <tr>
+                        <td>3</td>
+                        <td>王麻子</td>
+                        <td>男</td>
+                        <td>65</td>
+                    </tr>
+                    </tbody>
+                </table>
             </div>
 
             <div class="modal-footer">
@@ -170,13 +198,6 @@
                                 time: 1000 //2秒关闭（如果不配置，默认是3秒）
                             }, function () {
                                 location.reload();
-                                /*$("#exampleModal").modal('hide');
-                                $('#exampleTableEvents').bootstrapTable(
-                                    "refresh",
-                                    {
-                                        url: "/admin/excelFileAjax/listCompanyFile.do?companyId=${companyId}",
-                                    }
-                                );*/
                             });
                         }
                         else {
