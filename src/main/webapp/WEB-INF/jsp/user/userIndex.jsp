@@ -83,6 +83,22 @@
                         <label for="psw" class="control-label">密码:</label>
                         <input type="text" class="form-control" id="psw" name="psw">
                     </div>
+                    <div class="form-group" id="streetDiv">
+                        <label for="psw" class="control-label">街道:</label>
+                        <select class="form-control m-b" name="street" id="street">
+                            <option value="元和街道">元和街道</option>
+                            <option value="黄桥街道">黄桥街道</option>
+                            <option value="太平街道">太平街道</option>
+                            <option value="北桥街道">北桥街道</option>
+                            <option value="阳澄湖镇">阳澄湖镇</option>
+                            <option value="渭塘镇">渭塘镇</option>
+                            <option value="黄埭镇">黄埭镇</option>
+                            <option value="望亭镇">望亭镇</option>
+                            <option value="开发区">开发区</option>
+                            <option value="高铁新城">高铁新城</option>
+                            <option value="度假区">度假区</option>
+                        </select>
+                    </div>
                     <div class="form-group">
                         <label for="psw" class="control-label">邮箱:</label>
                         <input type="email" class="form-control" id="email" name="email">
@@ -274,6 +290,7 @@
                     psw: $("#psw").val(),
                     email: $("#email").val(),
                     userId: $("#userId").val(),
+                    street: $("#street").val(),
                     flag: $("input[name='flag']:checked").val()
                 },
                 success: function (data) {
@@ -322,6 +339,7 @@
                 if (data.success) {
                     $("#roleName").val(data.adminUser.name);
                     $("#email").val(data.adminUser.email);
+                    $("#street").val(data.adminUser.street);
                     $(":radio[name='flag'][value='" + data.adminUser.flag + "']").prop("checked", "checked");
                     $("#pdwDiv").hide();
                     $("#exampleModal").modal('show');
