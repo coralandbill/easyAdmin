@@ -73,7 +73,7 @@
                 <div class="navbar-header"><a class="navbar-minimalize minimalize-styl-2 btn btn-primary " href="#"><i
                         class="fa fa-bars"></i> </a>
                     <form role="search" class="navbar-form-custom" method="post"
-                          action="http://www.zi-han.net/theme/hplus/search_results.html">
+                          action="<%--http://www.zi-han.net/theme/hplus/search_results.html--%>">
                         <div class="form-group">
                             <input type="text" placeholder="请输入您需要查找的内容 …" class="form-control" name="top-search"
                                    id="top-search">
@@ -113,7 +113,7 @@
                     frameborder="0" data-id="index_v1.html" seamless></iframe>
         </div>
         <div class="footer">
-            <div class="pull-right">&copy; 2014-2015 <a href="http://www.zi-han.net/" target="_blank">摩里科技</a>
+            <div class="pull-right">&copy; 2014-2015 <a href="javascript:void(0);" target="_blank">摩里科技</a>
             </div>
         </div>
     </div>

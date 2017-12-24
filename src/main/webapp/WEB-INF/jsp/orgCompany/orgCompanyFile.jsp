@@ -1,5 +1,7 @@
 <!DOCTYPE html>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@taglib uri = "http://java.sun.com/jsp/jstl/functions" prefix = "fn" %>
 <!DOCTYPE html>
 <html>
 <!-- Mirrored from www.zi-han.net/theme/hplus/table_bootstrap.html by HTTrack Website Copier/3.x [XR&CO'2014], Wed, 20 Jan 2016 14:20:03 GMT -->
@@ -28,16 +30,18 @@
                     <div class="example-wrap">
                         <h4 class="example-title">企业文件管理</h4>
                         <div class="example">
+                            <c:if test="${fn:contains(authorities, '/admin/orgCompany/editOrgCompany.do')}">
                             <div class="btn-group hidden-xs" id="exampleTableEventsToolbar" role="group">
                                 <button type="button"
                                         onclick="javascript:location.href='/admin/orgCompany/editOrgCompany.do';"
                                         class="btn btn-outline btn-default">
                                     <i class="glyphicon glyphicon-plus" aria-hidden="true">添加</i>
                                 </button>
-                                <%--<button type="button" class="btn btn-outline btn-default">
-                                    <i class="glyphicon glyphicon-trash" aria-hidden="true">删除</i>
-                                </button>--%>
+                                    <%--<button type="button" class="btn btn-outline btn-default">
+                                        <i class="glyphicon glyphicon-trash" aria-hidden="true">删除</i>
+                                    </button>--%>
                             </div>
+                            </c:if>
                             <table id="exampleTableEvents" data-mobile-responsive="true">
                                 <thead>
                                 <tr>
