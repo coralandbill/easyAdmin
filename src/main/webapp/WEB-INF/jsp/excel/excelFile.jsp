@@ -232,6 +232,12 @@
                 if (data.success) {
                     layer.msg("保存成功");
                     $("#myModal5").modal("hide");
+                    $('#exampleTableEvents').bootstrapTable(
+                        "refresh",
+                        {
+                            url: "/admin/excelFileAjax/listCompanyFile.do?companyId=${companyId}",
+                        }
+                    );
                 }
                 else {
                     layer.msg("操作失败");

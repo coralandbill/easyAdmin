@@ -205,8 +205,8 @@ public class OrgCompanyServiceImpl implements OrgCompanyService {
             if (!excelDir_BY.endsWith(File.separator)) {
                 excelDir_BY = excelDir_BY + File.separator;
             }
-            excelDir_BY = excelDir_BY + "excel" + File.separator;
-            File newFile = new File(excelDir_BY + fileName + profix);
+            String filePath = excelDir_BY + "excel" + File.separator;
+            File newFile = new File(filePath + fileName + profix);
             try {
                 //获取原一企一档数据
                 OneCompanyOneRecordExample example = new OneCompanyOneRecordExample();
@@ -219,7 +219,7 @@ public class OrgCompanyServiceImpl implements OrgCompanyService {
                 }
                 FileUtils.copyFile(file, newFile);
                 Map<String, Object> paramsMap = new HashMap<>();
-                paramsMap.put("filePath", excelDir_BY + fileName + profix);
+                paramsMap.put("filePath", filePath + fileName + profix);
                 paramsMap.put("companyName", record.getCompanyName());
                 paramsMap.put("street", record.getStreet());
                 paramsMap.put("address", record.getAddress());
