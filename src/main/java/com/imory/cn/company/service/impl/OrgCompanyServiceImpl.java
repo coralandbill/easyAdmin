@@ -74,13 +74,14 @@ public class OrgCompanyServiceImpl implements OrgCompanyService {
         int pageSize = (int) paramsMap.get("pageSize");
         String companyName = (String) paramsMap.get("companyName");
         String street = (String) paramsMap.get("street");
+        Integer userId = (Integer) paramsMap.get("userId");
 
         OrgCompanyExample orgCompanyExample = new OrgCompanyExample();
         OrgCompanyExample.Criteria criteria = orgCompanyExample.createCriteria();
         if (StringUtils.isNotBlank(companyName)) {
             criteria.andCompanyNameLike("%" + companyName + "%");
         }
-        if (StringUtils.isNotBlank(street)) {
+        if (userId != -1) {
             criteria.andStreetEqualTo(street);
         }
         criteria.andEnableEqualTo(Boolean.FALSE);

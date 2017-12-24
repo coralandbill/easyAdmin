@@ -72,6 +72,7 @@ public class OrgCompanyAjaxController {
         paramsMap.put("companyName", search);
         paramsMap.put("startPos", offset);
         paramsMap.put("pageSize", limit);
+        paramsMap.put("userId", adminUser.getId());
         if (adminUser.getId() != -1) {
             paramsMap.put("street", adminUser.getStreet());
         }
