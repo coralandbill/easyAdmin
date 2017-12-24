@@ -112,7 +112,6 @@ public class AdminUserServiceImpl implements AdminUserService {
     @Override
     public boolean insert(AdminUser user)
     {
-        user.setPsw(MD5Util.MD5(user.getPsw()));
         return mapper.insertSelective(user) > 0;
     }
 
