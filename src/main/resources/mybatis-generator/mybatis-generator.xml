@@ -17,7 +17,7 @@
         <!--<property name="forceBigDecimals" value="false" />-->
         <!--</javaTypeResolver>-->
 
-        <javaModelGenerator targetPackage="com.imory.cn.company.dto" targetProject="${basedir}/src/main/java">
+        <javaModelGenerator targetPackage="com.imory.cn.org.dto" targetProject="${basedir}/src/main/java">
             <!--<property name="enableSubPackages" value="true" />-->
             <property name="trimStrings" value="true" />
         </javaModelGenerator>
@@ -26,11 +26,11 @@
             <!--<property name="enableSubPackages" value="true" />-->
         </sqlMapGenerator>
 
-        <javaClientGenerator type="ANNOTATEDMAPPER" targetPackage="com.imory.cn.company.dao"  targetProject="${basedir}/src/main/java">
+        <javaClientGenerator type="ANNOTATEDMAPPER" targetPackage="com.imory.cn.org.dao"  targetProject="${basedir}/src/main/java">
             <!--<property name="enableSubPackages" value="true" />-->
         </javaClientGenerator>
 
-        <table schema="lhadmin" tableName="org_company" domainObjectName="OrgCompany" >
+        <table schema="lhadmin" tableName="orgaccountinfo" domainObjectName="OrgAccountInfo" >
             <property name="useActualColumnNames" value="true"/>
             <generatedKey column="id" sqlStatement="MySql" identity="true" />
             <!--<columnOverride column="DATE_FIELD" property="startDate" />-->
