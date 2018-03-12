@@ -66,7 +66,7 @@ public interface OrgCompanyMapper {
         "#{province,jdbcType=VARCHAR}, #{city,jdbcType=VARCHAR}, ",
         "#{code,jdbcType=VARCHAR}, #{street,jdbcType=VARCHAR}, #{address,jdbcType=VARCHAR}, ",
         "#{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP}, ",
-        "#{creator,jdbcType=INTEGER}, #{enable,jdbcType=BIT})"
+        "#{creator,jdbcType=INTEGER}, #{orderNum,jdbcType=INTEGER}, #{enable,jdbcType=BIT})"
     })
     @SelectKey(statement="SELECT LAST_INSERT_ID()", keyProperty="id", before=false, resultType=Integer.class)
     int insert(OrgCompany record);
@@ -115,7 +115,7 @@ public interface OrgCompanyMapper {
     @Select({
         "select",
         "id, logonId, logonPsd, companyName, state, province, city, code, street, address, ",
-        "createTime, updateTime, creator, enable",
+        "createTime, updateTime, creator, orderNum, enable",
         "from org_company",
         "where id = #{id,jdbcType=INTEGER}"
     })
@@ -133,6 +133,7 @@ public interface OrgCompanyMapper {
         @Result(column="createTime", property="createTime", jdbcType=JdbcType.TIMESTAMP),
         @Result(column="updateTime", property="updateTime", jdbcType=JdbcType.TIMESTAMP),
         @Result(column="creator", property="creator", jdbcType=JdbcType.INTEGER),
+        @Result(column="orderNum", property="orderNum", jdbcType=JdbcType.INTEGER),
         @Result(column="enable", property="enable", jdbcType=JdbcType.BIT)
     })
     OrgCompany selectByPrimaryKey(Integer id);
@@ -184,6 +185,7 @@ public interface OrgCompanyMapper {
           "createTime = #{createTime,jdbcType=TIMESTAMP},",
           "updateTime = #{updateTime,jdbcType=TIMESTAMP},",
           "creator = #{creator,jdbcType=INTEGER},",
+          "orderNum = #{orderNum,jdbcType=INTEGER},",
           "enable = #{enable,jdbcType=BIT}",
         "where id = #{id,jdbcType=INTEGER}"
     })

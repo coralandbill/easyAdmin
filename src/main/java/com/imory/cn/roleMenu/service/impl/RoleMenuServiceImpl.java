@@ -30,6 +30,7 @@ public class RoleMenuServiceImpl implements RoleMenuService {
         HashMap<Integer, ArrayList<Menu>> map = new HashMap<Integer, ArrayList<Menu>>();
         List<Menu> menus = roleMenuCommonMapper.listMenuByRoleId(id);
         for (Menu menu : menus) {
+            menu.setUrl("javascript:void(0);");
             if(menu.getRoleId() != null)
             {
                 menu.setChecked(Boolean.TRUE);

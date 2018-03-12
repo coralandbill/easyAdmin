@@ -142,7 +142,7 @@ public class OrgCompanyServiceImpl implements OrgCompanyService {
     }
 
     @Override
-    public boolean updateDangerAndTransfer(String data, Integer fileId) {
+    public boolean updateDangerAndTransfer(String data, Integer fileId, Integer userId) {
         JSONArray jsonArray = new JSONArray(data);
         boolean result = true;
         List<Map<String, Object>> wfList = new ArrayList<>();
@@ -241,6 +241,9 @@ public class OrgCompanyServiceImpl implements OrgCompanyService {
                     String url = webUrl + "/excel/" + fileName + profix;
                     ExcelFile excelFile = excelFileMapper.selectByPrimaryKey(fileId);
                     excelFile.setFileCompanyUrl(url);
+                    excelFile.setState(1);
+                    excelFile.setUpdateTime(new Date());
+                    excelFile.setUpdateor(userId);
                     if (excelFileMapper.updateByPrimaryKey(excelFile) < 1) {
                         result = false;
                     }

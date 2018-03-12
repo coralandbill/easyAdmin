@@ -40,7 +40,7 @@ public class OrgCompanyAjaxController {
         AdminUser adminUser = (AdminUser) session.getAttribute(AdminUser.SESSION_ID);
 
         Map<String, Object> paramsMap = new HashMap<>();
-        if(StringUtils.isNotBlank(adminUser.getStreet())){
+        if (StringUtils.isNotBlank(adminUser.getStreet())) {
             paramsMap.put("street", adminUser.getStreet());
         }
         paramsMap.put("companyName", search);
@@ -137,7 +137,8 @@ public class OrgCompanyAjaxController {
         for (CompanyDanger companyDanger : companyDangerList) {
             roleBeanMap.setBean(companyDanger);
             Map branchInstMap = new HashMap<>();
-            branchInstMap.put("createTimeStr", new DateTime(companyDanger.getCreateTime()).toString("yyyy-MM-dd HH:mm"));
+            branchInstMap.put("createTimeStr", new DateTime(companyDanger.getCreateTime()).toString("yyyy-MM-dd " +
+                    "HH:mm"));
             branchInstMap.putAll(roleBeanMap);
             resultList.add(branchInstMap);
         }
@@ -159,9 +160,10 @@ public class OrgCompanyAjaxController {
     }
 
     @RequestMapping("/saveCompanyDanger")
-    public String saveCompanyDanger(String data, Integer fileId) {
+    public String saveCompanyDanger(String data, Integer fileId, HttpSession session) {
         JSONObject jsonObject = new JSONObject();
-        jsonObject.put("success", orgCompanyService.updateDangerAndTransfer(data, fileId));
+        AdminUser adminUser = (AdminUser) session.getAttribute(AdminUser.SESSION_ID);
+        jsonObject.put("success", orgCompanyService.updateDangerAndTransfer(data, fileId, adminUser.getId()));
         return jsonObject.toString();
     }
 }

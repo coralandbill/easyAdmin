@@ -34,5 +34,5 @@ public interface OrgCompanyService {
 
     List<CompanyTransfer> listCompanyTransfer(Integer fileId);
 
-    boolean updateDangerAndTransfer(String data, Integer fileId);
+    boolean updateDangerAndTransfer(String data, Integer fileId, Integer userId);
 }

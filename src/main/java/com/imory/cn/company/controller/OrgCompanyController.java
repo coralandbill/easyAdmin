@@ -49,7 +49,7 @@ public class OrgCompanyController {
     @RequestMapping(value = "/saveOrgCompany", method = RequestMethod.POST)
     public String saveOrgCompany(String companyName, String logonId, String logonPsd,
                                  String province, String city, String code, String street,
-                                 String address, Integer orgCompanyId, HttpSession session)
+                                 String address, Integer orgCompanyId, Integer orderNum,HttpSession session)
     {
         AdminUser adminUser = (AdminUser) session.getAttribute(AdminUser.SESSION_ID);
 
@@ -94,6 +94,9 @@ public class OrgCompanyController {
         if (StringUtils.isNotBlank(address))
         {
             orgCompany.setAddress(address);
+        }
+        if(orderNum != null){
+            orgCompany.setOrderNum(orderNum);
         }
         if (orgCompanyId != null)
         {
