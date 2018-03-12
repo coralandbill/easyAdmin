@@ -4,7 +4,8 @@ import com.imory.cn.admin.dto.AdminUser;
 import com.imory.cn.annotation.SessionCheck;
 import com.imory.cn.company.dto.OrgCompany;
 import com.imory.cn.company.service.OrgCompanyService;
-import org.apache.commons.lang3.StringUtils;
+import com.imory.cn.utils.MD5Util;
+import org.apache.commons.lang.StringUtils;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -72,7 +73,7 @@ public class OrgCompanyController {
         }
         if (StringUtils.isNotBlank(logonPsd))
         {
-            orgCompany.setLogonPsd(logonPsd);
+            orgCompany.setLogonPsd(MD5Util.MD5(logonPsd));
         }
         if (StringUtils.isNotBlank(province))
         {

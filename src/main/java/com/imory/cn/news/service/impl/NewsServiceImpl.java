@@ -4,7 +4,7 @@ import com.imory.cn.news.dao.NewsMapper;
 import com.imory.cn.news.dto.News;
 import com.imory.cn.news.dto.NewsExample;
 import com.imory.cn.news.service.NewsService;
-import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

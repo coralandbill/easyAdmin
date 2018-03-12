@@ -1,7 +1,7 @@
 package com.imory.cn.intercept;
 
 import com.imory.cn.annotation.SessionCheck;
-import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;

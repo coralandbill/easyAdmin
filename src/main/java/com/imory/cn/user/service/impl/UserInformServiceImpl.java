@@ -4,7 +4,7 @@ import com.imory.cn.user.dao.UserInformMapper;
 import com.imory.cn.user.dto.UserInform;
 import com.imory.cn.user.dto.UserInformExample;
 import com.imory.cn.user.service.UserInformService;
-import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

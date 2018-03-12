@@ -5,6 +5,7 @@ import com.imory.cn.admin.dto.AdminUser;
 import com.imory.cn.role.dto.Role;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * 系统用户相关控制器
@@ -97,5 +98,5 @@ public interface AdminUserService {
      */
     boolean updatePass(int userId, String psw);
 
-    void deleteUserRole(Integer userId, String ids);
+    Map<String,Object> deleteUserRole(Integer userId, String ids);
 }

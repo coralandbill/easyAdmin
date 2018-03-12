@@ -6,7 +6,7 @@ import com.imory.cn.userRole.dto.UserRole;
 import com.imory.cn.userRole.service.UserRoleService;
 import com.imory.cn.utils.GetTotalPageNumUtil;
 import com.imory.cn.utils.MD5Util;
-import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang.StringUtils;
 import org.joda.time.DateTime;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -192,8 +192,9 @@ public class AdminUserAjaxController {
         JSONObject jsonObject = new JSONObject();
         AdminUser adminUser = (AdminUser) session.getAttribute(AdminUser.SESSION_ID);
         if (adminUser != null) {
-            adminUserService.deleteUserRole(adminUser.getId(), ids);
-            jsonObject.put("success", Boolean.TRUE);
+            Map<String,Object> resultMap = adminUserService.deleteUserRole(adminUser.getId(), ids);
+            jsonObject.put("success", resultMap.get("success"));
+            jsonObject.put("errMsg", resultMap.get("errMsg"));
         } else {
             jsonObject.put("success", Boolean.FALSE);
         }

@@ -6,9 +6,8 @@ import com.imory.cn.company.dto.CompanyTransfer;
 import com.imory.cn.company.dto.OrgCompany;
 import com.imory.cn.company.service.OrgCompanyService;
 import com.imory.cn.utils.GetTotalPageNumUtil;
-import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang.StringUtils;
 import org.joda.time.DateTime;
-import org.json.JSONArray;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cglib.beans.BeanMap;
@@ -45,6 +44,7 @@ public class OrgCompanyAjaxController {
             paramsMap.put("street", adminUser.getStreet());
         }
         paramsMap.put("companyName", search);
+        paramsMap.put("userId", adminUser.getId());
         paramsMap.put("startPos", offset);
         paramsMap.put("pageSize", limit);
 

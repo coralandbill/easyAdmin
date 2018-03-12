@@ -4,7 +4,7 @@ import com.imory.cn.admin.dto.AdminUser;
 import com.imory.cn.annotation.SessionCheck;
 import com.imory.cn.enforce.dto.Enforce;
 import com.imory.cn.enforce.service.EnforceService;
-import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang.StringUtils;
 import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormat;
 import org.json.JSONObject;

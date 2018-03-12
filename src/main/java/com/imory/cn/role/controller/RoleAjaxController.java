@@ -5,7 +5,7 @@ import com.imory.cn.role.dto.Role;
 import com.imory.cn.role.service.RoleService;
 import com.imory.cn.roleMenu.service.RoleMenuService;
 import com.imory.cn.utils.GetTotalPageNumUtil;
-import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang.StringUtils;
 import org.joda.time.DateTime;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;

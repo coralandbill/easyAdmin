@@ -31,7 +31,7 @@
                 <div class="col-sm-12">
                     <!-- Example Events -->
                     <div class="example-wrap">
-                        <h4 class="example-title">执法管理</h4>
+                        <h4 class="example-title">举报管理</h4>
                         <div class="example">
                             <table id="exampleTableEvents" data-mobile-responsive="true">
                                 <thead>

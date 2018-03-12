@@ -4,7 +4,7 @@ import com.imory.cn.enforce.dao.EnforceMapper;
 import com.imory.cn.enforce.dto.Enforce;
 import com.imory.cn.enforce.dto.EnforceExample;
 import com.imory.cn.enforce.service.EnforceService;
-import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

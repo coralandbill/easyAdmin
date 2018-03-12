@@ -4,7 +4,7 @@ import com.imory.cn.annotation.SessionCheck;
 import com.imory.cn.news.dto.News;
 import com.imory.cn.news.service.NewsService;
 import org.apache.commons.io.FileUtils;
-import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang.StringUtils;
 import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormat;
 import org.json.JSONObject;
