@@ -158,7 +158,7 @@ public class AdminUserServiceImpl implements AdminUserService {
         for (String id : idArr) {
             AdminUser adminUser = mapper.selectByPrimaryKey(Integer.valueOf(id));
             if (adminUser != null) {
-                if (adminUser.getId() == -1 || adminUser.getCreator().equals(userId)) {
+                if (userId == -1 || adminUser.getCreator().equals(userId)) {
                     //删除角色
                     UserRoleExample roleExample = new UserRoleExample();
                     UserRoleExample.Criteria criteria = roleExample.createCriteria();
