@@ -155,6 +155,7 @@ public class AdminUserServiceImpl implements AdminUserService {
     public Map<String, Object> deleteUserRole(Integer userId, String ids) {
         Map<String, Object> resultMap = new HashMap<>(16);
         String[] idArr = ids.split(",");
+        int index = 0;
         for (String id : idArr) {
             AdminUser adminUser = mapper.selectByPrimaryKey(Integer.valueOf(id));
             if (adminUser != null) {
@@ -168,12 +169,16 @@ public class AdminUserServiceImpl implements AdminUserService {
                         userRoleMapper.deleteByPrimaryKey(userRole);
                     }
                     mapper.deleteByPrimaryKey(adminUser.getId());
-                    resultMap.put("success", true);
-                } else {
-                    resultMap.put("success", false);
-                    resultMap.put("errMsg", "您不能删除不是您所创建的用户");
+                    index = index + 1;
                 }
             }
+        }
+        if (index == idArr.length) {
+            resultMap.put("success", true);
+        } else {
+            resultMap.put("success", false);
+            resultMap.put("errMsg", "操作完成(删除成功[" + index + "]条，失败[" + (idArr.length - index) + "]条)," +
+                    "失败原因：不能删除非当前管理员创建的角色");
         }
         return resultMap;
     }
