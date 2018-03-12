@@ -6,6 +6,7 @@ import com.imory.cn.company.dto.CompanyTransfer;
 import com.imory.cn.company.dto.OrgCompany;
 import com.imory.cn.company.service.OrgCompanyService;
 import com.imory.cn.utils.GetTotalPageNumUtil;
+import org.apache.commons.lang3.StringUtils;
 import org.joda.time.DateTime;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -34,10 +35,15 @@ public class OrgCompanyAjaxController {
     private OrgCompanyService orgCompanyService;
 
     @RequestMapping("/listOrgCompany")
-    public String listOrgCompany(String search, Integer limit, Integer offset) {
+    public String listOrgCompany(String search, Integer limit, Integer offset, HttpSession session) {
         if (search == null) search = "";
 
+        AdminUser adminUser = (AdminUser) session.getAttribute(AdminUser.SESSION_ID);
+
         Map<String, Object> paramsMap = new HashMap<>();
+        if(StringUtils.isNotBlank(adminUser.getStreet())){
+            paramsMap.put("street", adminUser.getStreet());
+        }
         paramsMap.put("companyName", search);
         paramsMap.put("startPos", offset);
         paramsMap.put("pageSize", limit);

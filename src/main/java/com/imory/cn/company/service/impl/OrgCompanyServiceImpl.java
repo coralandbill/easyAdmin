@@ -81,7 +81,7 @@ public class OrgCompanyServiceImpl implements OrgCompanyService {
         if (StringUtils.isNotBlank(companyName)) {
             criteria.andCompanyNameLike("%" + companyName + "%");
         }
-        if (userId != -1) {
+        if (userId != -1 && StringUtils.isNotBlank(street)) {
             criteria.andStreetEqualTo(street);
         }
         criteria.andEnableEqualTo(Boolean.FALSE);
