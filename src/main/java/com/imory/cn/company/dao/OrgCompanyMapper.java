@@ -60,7 +60,7 @@ public interface OrgCompanyMapper {
         "province, city, ",
         "code, street, address, ",
         "createTime, updateTime, ",
-        "creator, enable)",
+        "creator, orderNum, enable)",
         "values (#{logonId,jdbcType=VARCHAR}, #{logonPsd,jdbcType=VARCHAR}, ",
         "#{companyName,jdbcType=VARCHAR}, #{state,jdbcType=INTEGER}, ",
         "#{province,jdbcType=VARCHAR}, #{city,jdbcType=VARCHAR}, ",
