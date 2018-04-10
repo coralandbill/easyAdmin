@@ -277,11 +277,13 @@
     $("#commentForm").validate({
         rules: {
             roleName: "required",
-            psw: "required"
+            psw: "required",
+            email: "required"
         },
         messages: {
             roleName: "请输入名称",
-            psw: "请输入密码"
+            psw: "请输入密码",
+            email: "请输入邮箱"
         },
         submitHandler: function () {
             $.ajax({

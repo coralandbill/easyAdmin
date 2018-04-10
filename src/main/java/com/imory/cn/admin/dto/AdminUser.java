@@ -84,6 +84,8 @@ public class AdminUser {
 
     private Integer roleId;
 
+    private String roleName;
+
     public Integer getRoleId()
     {
         return roleId;
@@ -318,5 +320,13 @@ public class AdminUser {
     public void setStreet(String street)
     {
         this.street = street;
+    }
+
+    public String getRoleName() {
+        return roleName;
+    }
+
+    public void setRoleName(String roleName) {
+        this.roleName = roleName;
     }
 }

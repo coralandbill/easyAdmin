@@ -5,6 +5,8 @@ import com.imory.cn.admin.service.AdminUserService;
 import com.imory.cn.annotation.SessionCheck;
 import com.imory.cn.menu.dto.Menu;
 import com.imory.cn.menu.service.MenuService;
+import com.imory.cn.role.dto.Role;
+import com.imory.cn.role.service.RoleService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -34,10 +36,12 @@ public class MainController {
     @Autowired
     private AdminUserService adminUserService;
 
+    @Autowired
+    private RoleService roleService;
+
     @RequestMapping("/index")
     @SessionCheck
-    public String index(Model model, HttpSession session)
-    {
+    public String index(Model model, HttpSession session) {
         AdminUser adminUser = (AdminUser) session.getAttribute(AdminUser.SESSION_ID);
         List<Menu> menuList = menuService.selectByUser(adminUser.getId());
         model.addAttribute("menuList", menuList);
@@ -50,8 +54,7 @@ public class MainController {
      * @return
      */
     @RequestMapping(value = "login", method = RequestMethod.GET)
-    public String login()
-    {
+    public String login() {
         return "login";
     }
 
@@ -61,20 +64,21 @@ public class MainController {
      * @return
      */
     @RequestMapping(value = "loginOut", method = RequestMethod.GET)
-    public String loginOut(HttpSession session)
-    {
+    public String loginOut(HttpSession session) {
         session.invalidate();
         return "redirect:/admin/login.do";
     }
 
     @RequestMapping(value = "login", method = RequestMethod.POST)
-    public String login(String name, String pass, ModelMap map, HttpSession session)
-    {
+    public String login(String name, String pass, ModelMap map, HttpSession session) {
         AdminUser user = adminUserService.login(name, pass);
-        if (user == null)
-        {
+        if (user == null) {
             map.put("error", "用户名或密码错误");
             return "login";
+        }
+        if (user.getRoleId() != null) {
+            Role role = roleService.selectById(user.getRoleId());
+            user.setRoleName(role.getName());
         }
         session.setAttribute(AdminUser.SESSION_ID, user);
         session.setAttribute(AdminUser.SESSION_AUTH_ID, menuService.selectAuthorities(user.getId()));
